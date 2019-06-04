@@ -1,0 +1,16 @@
+body{
+  background-color: #f9f9f9;
+}
+.register-form{
+  margin: 50px auto;
+  padding: 25px 20px;
+  background: #fff;
+  box-shadow: 2px 2px 4px #ab8de0;
+  border-radius: 5px;
+}
+.register-form h2{
+  margin-top: 0px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+}

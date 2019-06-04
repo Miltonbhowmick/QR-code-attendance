@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+	<title>session-{{session.session}}</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container reContainer">
+	<div class="row">
+		<div class="col-md-6">	
+			<div class="shadow-sm p-3 mb-3 bg-white rounded" >
+				<span class="label-success">Select course code</span>
+				<hr></hr>
+				<form method="POST">
+					{% csrf_token %}
+					{% for c in course_code %}		
+					<br>
+					<button class="btn btn-outline-info" type="submit" name="c" value="{{ c }}">{{ c }}</button>
+					{% endfor %}
+					<br>
+				</form>	
+			</div>
+		</div>
+
+		<div class="col-md-6" >
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				<div class="big-success">
+					Session: {{ session.session }}
+				</div>
+				<hr></hr>
+				<span class="label-success" style="background-color: #08C74E;">
+					Name of students
+				</span>
+				{% for s in course_student %}
+					<hr></hr>
+					<h4>{{s.student_user.first_name}} {{s.student_user.last_name}} </h4>
+				{% endfor %}
+	</div>
+</div>
+</div>
+</div>
+{% endblock %}

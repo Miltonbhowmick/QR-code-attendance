@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+	<title>Edit your profile</title>
+{% endblock %}
+
+{% block body %}
+
+<h1>EDIT PROFILE</h1>
+
+<form method='POST' enctype="multipart/form-data">
+	{% csrf_token %}	
+	{{form.as_p}}
+	<button type="submit" class="btn btn-outline-info">Submit</button>
+</form>
+
+
+
+{% endblock %}

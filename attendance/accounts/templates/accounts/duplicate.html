@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<title>Contact</title>
+{% endblock %}
+
+{% block body %}
+	<h1>Username: {{user}}</h1>
+	<p>Email: {{user.email}}</p>
+	<p>Description: {{user.userprofile.description}}</p>
+	<p>City: {{user.userprofile.city}}</p>
+	<p>Website: {{user.userprofile.website}}</p>
+{% endblock %}

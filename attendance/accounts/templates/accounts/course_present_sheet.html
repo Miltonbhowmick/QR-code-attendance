@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div> 
+	<div class ="row shadow-sm p-3 mb-5 bg-white rounded">
+	<div class="col-md-1">
+		<div class="titlebox">
+			<h6>Name Of students</h6>
+		</div>
+		{% for s in session_students %}
+			<hr></hr>
+			{{s}}
+		{% endfor %}
+	</div>
+
+	{% for date,students in attend_students %}
+		<div class="col-md-1">
+			<div class="titlebox">
+				<h6>{{date}}</h6>
+			</div>
+			<hr></hr>
+			<div class="titlebox" style="text-align:center;">
+				{% load static %}
+				{% for s in session_students %}
+					{% if s in students %}
+						<img src="{% static 'images/attendance_mark.png'  %}" class="w3-circle" style="height:24;width:24" alt="Avatar">
+					{% elif s not in students %}
+						<p style="font-weight: bold; color: red;">absent</p>
+					{% endif %}
+					<hr></hr>
+				{% endfor %}
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+
+{% endblock %}

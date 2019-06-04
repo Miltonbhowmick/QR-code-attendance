@@ -1,0 +1,87 @@
+.container{
+  margin-top:20px;
+  max-width: 1330px;
+}
+.reContainer{
+  width: 85%;
+}
+.body-tag{
+    color: #000 !important;
+    background-color: #fff !important;
+}
+.present-sheet-div{
+    margin-bottom: 10px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.h6, h6{
+	font-size: .8rem;
+}
+.titlebox{
+	height: 30px;
+	width: 60px;
+}
+.label-success {
+  background-color:  #FC3648;
+  color: white;
+  padding: 8px;
+  font-size: 16px;
+  font-family: Arial;
+}
+.big-success{
+  background-color:    #FC3648;
+  color: white;
+  padding: 8px;
+  font-size: 16px;
+  font-family: Arial;
+  text-align: center;
+}
+.divPre {
+    display: block;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
+}
+.fonts{
+  font-size: 20px;
+}
+
+
+/* Footer css */
+.pt{
+  padding-top: 60px;
+}
+
+.page-footer{
+  margin-top: 25%; 
+  background-color: #1f2021;
+
+}
+.container-fluid{
+  text-align: left !important;  
+  width: 90%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.text-white{
+  font-size: 14px;
+  color: #fff;
+}
+.list-style{
+  font-size: 14px;
+  color: #fff;
+  font-weight: norma
+}
+.footer-copyright{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding: 10px 4px 0;
+  background: #111;
+  color: #fff;
+}

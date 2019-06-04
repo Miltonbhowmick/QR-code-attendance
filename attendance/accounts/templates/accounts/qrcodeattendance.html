@@ -1,0 +1,64 @@
+	<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		{% load static %}
+
+		<link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css'%}" crossorigin="anonymous"></link>
+		<link rel="stylesheet" href="{% static 'accounts/navigation-css.css' %}" type="text/css"></link>
+		
+		<link rel="stylesheet" href="{% static 'accounts/attendance_css.css' %}"  type="text/css" > </link>
+
+		<link rel="icon" href="{% static 'images/title logo.png' %}" type="image/png" sizes="32x32">
+		<title>QR Code Attendance</title>
+
+	</head>
+	<body>
+		<div class="container" style="height: 500px;">
+			<div class="row">
+				<div class="col-md-12" style="font-size:70px;text-align: center;">
+					{% load static %}
+		      		<img src="{% static 'images/qr code attendance logo.png' %}" style="max-width: 140px;margin-top: 30px; "></img>
+			      	<div style="font-size:70px;">
+						QR CODE ATTENDANCE PORTAL
+					</div>	
+						<div class="blocktext">
+						This web portal is not support to all person. Only registered user from higher authority can access.
+					</div>
+				</div>
+			</div>	
+			<br>
+			<div class="row">
+				<div class="col-md-4">
+					<a href="{% url 'accounts:login' %}" style="float: right;">Login</a>
+				</div>
+				<div class="col-md-4">
+					<a href="{% url 'accounts:signup' %}" style="margin-left:110px;">Teacher-Sign Up</a>
+				</div>
+				<div class="col-md-4">
+					<a href="{% url 'accounts:student_signup' %}" style="float: left;">Student-SignUp</a>
+				</div>				
+			</div>
+
+		</div>
+
+
+		<!--footer-->
+			<footer class="footer">
+				<div class="contact">
+					<h4 style="font-weight: bold; text-transform: uppercase; ">{{title}}</h4>
+					<!--list of contact links-->
+					<ul>
+						{% for name,link in zipped %}
+							<li>
+								<a href="{{link}}">{{name}}</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</footer>
+			<!-- End footer-->
+	</body>
+</html>

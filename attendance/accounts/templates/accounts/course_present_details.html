@@ -22,7 +22,9 @@
 			    {% for s in session_students %}
 			      <tr>
 				      	{% csrf_token %}
-				        <td><button type="submit" name="s" value="{{s}}" >{{s}}</button></td>
+				        <td><button type="submit" name="s" value="{{s}}" style="background: none;
+	color: blue ;
+	border: none;">{{s}}</button></td>
 			      </tr>
 			    {% endfor %}
 			    </form>

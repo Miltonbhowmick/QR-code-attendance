@@ -23,6 +23,13 @@
 	height: 30px;
 	width: 60px;
 }
+.btn-outline-info{
+  color: #33b5e5;
+  border-color: #33b5e5;
+}
+.btn-outline-info:hover{
+  background-color: #33b5e5;
+}
 .label-success {
   background-color:  #FC3648;
   color: white;

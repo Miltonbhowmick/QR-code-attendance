@@ -6,11 +6,22 @@
 
 {% block body %}
 
-	<span class="big-success">Course Code: {{course_code}}</span>
+	<div class="row">
+		<div class="col-md-6">
+			<span class="big-success titleFonts" style="float: left;">Course Code: {{course_code}}</span>
+		</div>
+		<div class="col-md-6">
+			<form method="POST">
+				{% csrf_token %}
+				<button type="submit" name="c" value="{{course_code}}"class="btn btn-outline-info" style="float: right;">Delete</button>
+			</form>
+		</div>
+	</div>
+	
 	<hr></hr>
 	<div class="row">
 
-		<div class="col-md-3"  style="max-width: 13%;">
+		<div class="col-md-3"  style="max-width: 16%;">
 			<table class="table table-bordered">
 			  <thead>
 			    <tr>
@@ -22,10 +33,9 @@
 			    {% for s in session_students %}
 			      <tr>
 				      	{% csrf_token %}
-				        <td><button type="submit" name="s" value="{{s}}" style="background: none;
-	color: blue ;
-	border: none;">{{s}}</button></td>
-			      </tr>
+				        <td><button type="submit" name="s" value="{{s}}" style="background: none;color: blue ;border: none;">{{s}}
+				        </button></td>
+			      	</tr>
 			    {% endfor %}
 			    </form>
 			  </tbody>
@@ -34,7 +44,7 @@
 
 
 		{% for date, students in attend_students %}
-		<div class="col-md-3" style="max-width: 10%;">
+		<div class="col-md-3" style="max-width: 14%;">
 			<table class="table table-bordered" style="text-align: center;">
 			  <thead>
 			    <tr>

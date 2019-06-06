@@ -10,7 +10,7 @@
 
 		<!-- left part -->
 		<div class="col-md-3" >
-			<div class="shadow p-3 mb-5 bg-white rounded">
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 2px solid #eee;">
 				<div class="d-flex justify-content-center">
 					<h3>{{user_details.user.first_name}} {{user_details.user.last_name}}</h3>
 				</div>
@@ -29,27 +29,42 @@
 		<!-- End left part -->
 
 		<!-- middle part --> 
-		<div class="col-md-6"> 
-			<div class="shadow p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;">
-
-				<h5>Get the QR code</h5>
+		<div class="col-md-5"> 
+			<div class="big-success titleFonts">
+					Get the QR code
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 2px solid #eee;">
+				<span class="titleFonts titleColor">Select the session</span>	
 				<hr></hr>
-				<h3>Select the session</h3>	
 				{% for session in repeat %}
 					<a href="{{ session.get_absolute_url }}" class="btn btn-outline-info">{{ session }}</a>
 				{% endfor %}		
 			</div>
-			<div class="shadow p-3 mb-5 bg-white rounded">
-				All the news feed here
+			<div class="big-success titleFonts">
+				Classes held by others
 			</div>
+			{% for teacher,sheet,percentage in last_five_sheets %}
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 2px solid #eee;">
+					<p style="font-size:18px;font-weight: bold; color: #333;margin-bottom:0px;" >{{sheet}}</p>
+					<p style="font-size:16px; color: #666;margin-bottom:0px;">{{teacher}}, {{position}}</p>
+					<hr></hr>
+					<span style="color: #333;">
+						<h4>Attendance Performance</h4>
+						<h4>{{percentage}}%</h4>
+					</span>
+			</div>
+			{% endfor %}
 		</div>
 		<!-- End middle part -->
 
 		<!-- right part -->
-		<div class="col-md-3">
+		<div class="col-md-4">
 			<!--- Each day attendance --->	
-			<div class="pre-scrollable shadow p-3 mb-5 bg-white rounded">
-				<h5>Select class present sheets</h5>
+			<div class="big-success titleFonts">
+					present sheets
+			</div>
+			<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded" style="border: 2px solid #eee;">
+				<span class="titleFonts titleColor" style="font-size: 14px;">select present sheet by date</span>	
 				<hr></hr>
 				{% for sheet in present_sheet %}
 					<div class="present-sheet-div">
@@ -60,8 +75,11 @@
 			<!--- End each day attendance --->	
 
 			<!--- Each course attendance --->
-				<div class="pre-scrollable shadow p-3 mb-5 bg-white rounded">
-				<h5>Course Present Sheet</h5>
+			<div class="big-success titleFonts">
+					Course Present Sheet
+			</div>
+				<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded" style="border: 2px solid #eee;">
+				<span class="titleFonts titleColor" style="font-size: 14px;">details of each course attendance</span>	
 				<hr></hr>
 				<form method="POST">
 					{% csrf_token %}

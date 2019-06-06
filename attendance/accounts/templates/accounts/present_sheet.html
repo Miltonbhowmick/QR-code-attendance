@@ -7,10 +7,18 @@
 {% endblock %}
 
 {% block body %}
-
+	
+	<div class="row">
+		<div class="col-md-12">
+			<form method="POST">
+				{% csrf_token %}
+				<button type="submit" name="c" value="{{course_code}}"class="btn btn-outline-info" style="float: right;">Delete</button>
+			</form>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-6 shadow-sm p-3 mb-3 bg-white rounded">	
-			<div class="big-success">
+			<div class="big-success titleFonts">
 				Name of students
 			</div>
 				{% load static %}
@@ -40,7 +48,7 @@
 			<!--<script type="text/javascript" src="../jquery.qrcode.min.js"></script>
 			--><script type="text/javascript" src="{%static 'accounts/jquery-qrcode-master/src/jquery.qrcode.js' %}"></script>
 			<script type="text/javascript" src="{% static 'accounts/jquery-qrcode-master/src/qrcode.js' %}"></script>
-				<div class="big-success"> QR Code</div>
+				<div class="big-success titleFonts"> QR Code</div>
 				<hr></hr>
 				<div id="qrcodeTable"></div>
 				<div id="qrcodeCanvas"></div>

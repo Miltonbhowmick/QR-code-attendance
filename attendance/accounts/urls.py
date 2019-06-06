@@ -32,12 +32,17 @@ urlpatterns = [
     path('qrcodeattendance/profile/', views.view_profile, name='profile'), # for teacher
     path('qrcodeattendance/student_profile/', views.view_student_profile, name='student_profile'), # for teacher
     path('qrcodeattendance/edit_profile/',views.edit_profile, name='edit_profile'), # for edit profile  
+    
+    #delete urls
+    re_path('^qrcodeattendance/profile/presentsheet/delete/(?P<random_url>[a-zA-Z0-9_]+)/$', views.attendance_sheet_delete, name='attendance_sheet_delete'),
+    re_path('^qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/presentsheet/delete-all/', views.course_attendance_details_delete, name='course_attendance_details_delete'),    
+    
     re_path('^qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/(?P<session>[a-zA-Z0-9-_]+)/(?P<student>[a-zA-Z0-9-_]+)/$',views.course_percentage, name='course_percentage'),
     re_path('^qrcodeattendance/profile/session/(?P<slug>[-\w]+)/$', views.view_session, name='session'),
     re_path('^qrcodeattendance/profile/session/(?P<slug>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code/(?P<random_url>[a-zA-Z0-9-_]+)/$', views.view_qr_code, name='view_qr_code'),
     re_path('^qrcodeattendance/profile/(?P<random_url>[a-zA-Z0-9-_]+)/$', views.present_sheet, name='present_sheet'), 
     re_path('^qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/presentsheet/',views.course_present_sheet, name='course_present_sheet'),
-
+   
     #API urls
     path('hello-view/', views.HelloApiView.as_view()),
     re_path('qrcodeattendance/profile/session/(?P<session>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code_api/(?P<random_url>[a-zA-Z0-9-_]+)', views.AttendanceSheetView.as_view()),

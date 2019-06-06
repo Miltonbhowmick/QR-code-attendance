@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+	
+	<div class="row">
+		<div class="col-md-6">	
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 2px solid #eee; color:#666;">
+				<h5>Are you sure to delete all attendance of {{course_code}} <span style="font-weight: bold;">permanently?</span></h5>
+				<form method="POST">
+					{% csrf_token %}
+					<button type="submit" name="c" value="yes" class="btn btn-outline-info">Yes</button>
+					<button type="submit" name="c" value="no" class="btn btn-outline-info">No</button>
+				</form>
+			</div>			
+		</div>
+	</div>
+
+{% endblock %}

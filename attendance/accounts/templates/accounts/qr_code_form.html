@@ -6,8 +6,6 @@
 {% endblock %}
 
 {% block body %}
-
-<div class="container reContainer">
 	
 	<div class="row">
 		<div class="col-md-6">
@@ -44,8 +42,10 @@
 			{% load static %}
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 			<!--<script type="text/javascript" src="../jquery.qrcode.min.js"></script>
-			--><script type="text/javascript" src="{%static 'accounts/jquery-qrcode-master/src/jquery.qrcode.js' %}"></script>
-			<script type="text/javascript" src="{% static 'accounts/jquery-qrcode-master/src/qrcode.js' %}"></script>
+			-->
+			<script type="text/javascript" src="{%static 'accounts/jquery-qrcode-master/src/jquery.qrcode.js' %}"></script>
+			<script type="text/javascript" src="{% static 'accounts/jquery-qrcode-master/src/qrcode.js' %}">
+			</script>
 				<div class="big-success"> QR Code</div>
 				<hr></hr>
 				<div id="qrcodeTable"></div>
@@ -53,18 +53,17 @@
 				<hr></hr>	
 				<button class="btn btn-outline-info" type="button" id="generate"> generate </button>
 			<script>
-
-					$("#qrcodeTable").hide();
-					  //jQuery('#qrcode').qrcode("this plugin is great");
-					   jQuery('#qrcodeTable').qrcode({
-						render  : "table",
-						text  : "{{link}}"
-					  });
-					$("#generate").click(function(){
-					  $("#qrcodeTable").toggle();			  
-					});
+				$("#qrcodeTable").hide();
+				  //jQuery('#qrcode').qrcode("this plugin is great");
+				   jQuery('#qrcodeTable').qrcode({
+					render  : "table",
+					text  : "{{link}}"
+				  });
+				$("#generate").click(function(){
+				  $("#qrcodeTable").toggle();			  
+				});
 			</script>
 		</div>
 	</div>
-<div>
+</div>
 {% endblock %}

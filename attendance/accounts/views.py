@@ -135,19 +135,21 @@ def view_profile(request):
     """ course performances """
     sheets = list()
     last_five_sheets = PresentSheet.objects.all().order_by('-id')[:5]
-    print(last_five_sheets)
+
     for sheet in last_five_sheets:
         course_code = CourseCode.objects.get(course_code=sheet.select_course_code)
         t1 = course_code.teacher1
         t2 = course_code.teacher2
-        t1_obj = TeacherProfile.objects.get(teacher_user=t1)
-        t1_sheets = t1_obj.class_presentsheet.all()
-
-        t2_obj = TeacherProfile.objects.get(teacher_user=t2)
-        t2_sheets = t2_obj.class_presentsheet.all()
+        
+        if t1:
+            t1_obj = TeacherProfile.objects.get(teacher_user=t1)
+            t1_sheets = t1_obj.class_presentsheet.all()
+        if t2:
+            t2_obj = TeacherProfile.objects.get(teacher_user=t2)
+            t2_sheets = t2_obj.class_presentsheet.all()
 
         total_student = StudentProfile.objects.filter(student_session=sheet.select_session).all().count()
-        print(total_student)
+
         if sheet in t1_sheets:
             t1_attend_students = sheet.attend_user.all().count()
             t1_percentage = (t1_attend_students/total_student)*100
@@ -181,7 +183,20 @@ def view_student_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:qrcodeattendance')
 
-    return render(request, 'accounts/student_profile.html')
+    user = request.user
+    user_details = UserProfile.objects.get(user= user)
+    student = StudentProfile.objects.get(student_user=user)
+    session = ClassSession.objects.get(session=student.student_session)
+    course_codes = CourseCode.objects.filter(session=session)
+    
+    course_student = CoursePercentage.objects.get(student_user=user)
+
+    context = {
+        'user_details':user_details,
+    }
+
+    return render(request, 'accounts/student_profile.html',context)
+
 
 def edit_profile(request):
     if not request.user.is_authenticated:
@@ -351,27 +366,31 @@ def course_present_sheet(request, course_code):
     if request.method == 'POST':
         student = request.POST.get('s')
 
-        number_of_attend = 0
-        for num in attend_students:
-            if student in num[1]:
-                number_of_attend +=1
-        percentage = (number_of_attend/num_sheet)*100
-
+        percentage = 0.00
+        if num_sheet != 0: 
+            number_of_attend = 0
+            for num in attend_students:
+                if student in num[1]:
+                    number_of_attend +=1
+            percentage = (number_of_attend/num_sheet)*100
+            percentage = round(percentage,2)
         #storing percentage data
         user = User.objects.get(username=student)    
         student_user = StudentProfile.objects.get(student_user=user)
         user_session = ClassSession.objects.get(session= session)
-        course_percentage, created = CoursePercentage.objects.get_or_create(student_user= user, course_code=course, session=user_session)
-        if not created:
+
+        obj = CoursePercentage.objects.filter(student_user= user, course_code=course, session=user_session)
+        
+        if obj is None:
+            course_percentage=CoursePercentage(student_user= user, course_code=course, session=user_session)
             course_percentage.percentage=percentage
             course_percentage.save()
         else:
-            if percentage is None:
-                percentage =0
-            course_percentage.percentage = percentage
+            course_percentage=CoursePercentage.objects.get(student_user= user, course_code=course, session=user_session)
+            course_percentage.percentage=percentage
             course_percentage.save()
-            
-        return redirect('accounts:course_percentage', course_code=course_code,session=session, student=student)
+
+        return redirect('accounts:course_percentage', course_code=course,session=session, student=student)
 
     """ Paging the sheets """
     page = request.GET.get('page',1)
@@ -383,8 +402,6 @@ def course_present_sheet(request, course_code):
         attend_students = paginator.page(1)
     except EmptyPage:
         attend_students = paginator.page(paginator.num_pages)
-
-    print(attend_students.has_other_pages)
 
     context = {
         'session_students':session_students, 
@@ -430,10 +447,11 @@ def view_qr_code(request, slug, course_code, random_url):
 def course_percentage(request, course_code, session, student):
 
     user = User.objects.get(username=student)
-
-    course_percentage = CoursePercentage.objects.get(student_user=user)
-
+    course_percentage = CoursePercentage.objects.get(student_user=user,course_code__course_code=course_code,session__session=session)
+    int_course_percentage = int(course_percentage.percentage)
+    print(int_course_percentage)
     context = {
+        'int_course_percentage':int_course_percentage,
         'course_percentage': course_percentage,
     }
     return render(request, 'accounts/course_percentage.html', context)

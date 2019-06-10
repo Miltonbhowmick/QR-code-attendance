@@ -102,11 +102,11 @@ class StudentProfile(models.Model):
 		return f'{self.student_user}'
 
 class CoursePercentage(models.Model):
-	student_user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+	student_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 	course_code = models.ForeignKey(CourseCode, on_delete=models.SET_NULL, blank=True, null=True)
 	session = models.ForeignKey(ClassSession, on_delete=models.SET_NULL, blank=True, null=True)
 	percentage = models.IntegerField(null=True)
 
 	def __str__(self):
-		return f'{self.student_user}'
+		return str(self.student_user.username)+" "+str(self.course_code)
 

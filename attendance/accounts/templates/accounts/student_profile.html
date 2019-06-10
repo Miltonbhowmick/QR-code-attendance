@@ -1,9 +1,27 @@
 {% extends 'base.html' %}
-{% block head %}
-{% endblock %}
 
 {% block main-content %}
 
-	STUDENT!!!!!
-	
+<div class="row" style="box-sizing: inherit;">
+
+		<!-- left part -->
+		<div class="col-md-3" >
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="d-flex justify-content-center">
+					<h3>{{user_details.user.first_name}} {{user_details.user.last_name}}</h3>
+				</div>
+				<hr></hr>
+				<p class="d-flex justify-content-center"> <!-- center the image -->
+					{% load staticfiles %}
+					<img src="{% static 'images/saifsir.jpg'  %}" class="w3-circle" style="height:106px;width:106px" alt="Avatar">
+				</p>
+				<p><i></i>{{ position }}</p>
+				<p><i></i>{{ user_details.city}}, {{ user_details.country}}</p>
+				<p><i></i></p>
+
+				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</button></a>
+			</div>
+		</div>
+</div>
+
 {% endblock %}

@@ -12,16 +12,18 @@ class ClassSessionAdmin(admin.ModelAdmin):
 class CourseCodeAdmin(admin.ModelAdmin):
 	search_fields = ('course_code',)
 
-class StudeneProfileAdmin(admin.ModelAdmin):
-	search_fields = ('student_id','student_user__first_name','student_user__last_name','student_user__username','student_user__email')
+class StudentProfileAdmin(admin.ModelAdmin):
+	search_fields = ('student_user__username',)
+
 class PresentSheetAdmin(admin.ModelAdmin):
-	search_fields = ('join_date',)
+	search_fields = ('joint_date','select_session','select_course_code',)
+
 class CoursePercentageAdmin(admin.ModelAdmin):
-	search_fields = ('student_user__first_name','student_user__last_name','student_user__username','student_user__email')
+	search_fields = ('student_user__username','student_user__email','student_user__first_name','student_user__last_name',)
 
 admin.site.register(ClassSession)
-admin.site.register(CourseCode, CourseCodeAdmin)
-admin.site.register(StudentProfile, StudeneProfileAdmin)
+admin.site.register(CourseCode,CourseCodeAdmin)
+admin.site.register(StudentProfile,StudentProfileAdmin)
 admin.site.register(TeacherProfile)
-admin.site.register(PresentSheet, PresentSheetAdmin)
-admin.site.register(CoursePercentage, CoursePercentageAdmin)
+admin.site.register(PresentSheet,PresentSheetAdmin)
+admin.site.register(CoursePercentage,CoursePercentageAdmin)

@@ -2,52 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="REPLACE WITH YOUR OWN KEYWORDS HERE, AND HERE, AND HERE">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <meta http-equiv="refresh" content="2; URL=https://www.w3.org/TR/WCAG20-TECHS/H76.html">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css' %}">
-    <!-- own css -->
-    
-    <link rel="stylesheet" href="{% static 'accounts/navigation-css.css' %}" type="text/css"></link>  
-    <link rel="stylesheet" href="{% static 'accounts/changes.css' %}" type="text/css" ></link>
-    
-    {% block head %}
 
-    {% endblock %}
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <!--Fontawesome CSS-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <!-- Bootstrap CSS -->
+   
+    <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css'%}" crossorigin="anonymous"></link>
 
   </head>
   <body>
     <header>
       <!-- Start Navbar and Intro -->
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar" id="navbar">
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar" id="navbar" style="background-color: black;">
+        <div class="container">
           <a class="navbar-brand" href="{% url 'accounts:qrcodeattendance' %}">QR Code Attendance</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
 
           <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav ml-auto" >
-              {% if user.is_authenticated %}
               <li class="nav-item"><a class="nav-link" href="{% url 'accounts:profile' %}" style="color: #fff;">
              Profile</a></li>
               <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}" style="color: #fff;">
               Logout</a></li>
-              {% else %}
-              <li><a class="btn btn-primary btn-rounded my-0" href="">Login</a></li>
-              {% endif %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'accounts:profile' %}" style="color: #fff;">Profile</a></li>
             </ul>
+              <form action="#" method="post">
+                  {% csrf_token %}
+                  <button class="btn btn-danger" type="submit">Logout</button>
+              </form>
+              <a class="btn btn-primary btn-rounded my-0" href="">Login</a>
+            
+          </div>
         </div>
       </nav>
     </header>
     <!-- End Navbar and Intro -->
 
-<div class="container" style="margin-top:100px;">
+<div class="container" style="margin-top: 60px;">
     {% block main-content %}
-        
+    
     {% endblock %}
 </div>
-
   <!-- Footer -->
     <footer class="page-footer font-small pt">
 
@@ -108,6 +113,7 @@
 
       </div>
       <!-- Footer Links -->
+}
 </div>
       <!-- Copyright -->
       <div class="footer-copyright text-center py-3">© 2019 Copyright:
@@ -116,7 +122,6 @@
       <!-- Copyright -->
   </footer>
     <!-- Footer -->
-
 
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

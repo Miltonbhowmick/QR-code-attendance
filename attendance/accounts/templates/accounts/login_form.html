@@ -2,26 +2,27 @@
 	<head>
 		<meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    	<meta name="viewport" content="width=device-width, initial-scale=1">
-
+    	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
     	{% load crispy_forms_tags %}
 		{% load static %}
 
 		<link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css'%}" crossorigin="anonymous"></link>
 		<link rel="stylesheet" href="{% static 'accounts/navigation-css.css' %}" type="text/css"></link>
-		
 		<link rel="stylesheet" href="{% static 'accounts/attendance_css.css' %}"  type="text/css" > </link>
-
+ 		<link rel="stylesheet" href="{% static 'accounts/changes.css' %}" type="text/css" ></link>
+    
 		<link rel="icon" href="{% static 'images/title logo.png' %}" type="image/png" sizes="32x32">
 		<title>Login to QR Code Attendance</title>
 	</head>
 	<body>
 
+		<div class="container">
 				<div class="row">
 					<div class="col-md-12" style="font-size:70px;text-align: center;">
 						{% load static %}
 			      		<img src="{% static 'images/qr code attendance logo.png' %}" style="max-width: 140px;margin-top: 30px; "></img>
-				      	<div style="font-size:70px;">
+				      	<div style="font-size:5vw;">
 							QR CODE ATTENDANCE PORTAL
 						</div>	
 						<div class="blocktext">
@@ -52,21 +53,76 @@
 						</form>
 					</div>
 				</div>
+</div>
+			 <!-- Footer -->
+    <footer class="page-footer font-small pt">
 
-			<!--footer-->
-			<footer class="footer">
-				<div class="contact">
-					<h4 style="font-weight: bold; text-transform: uppercase; ">{{title}}</h4>
-					<!--list of contact links-->
-					<ul>
-						{% for name,link in zipped %}
-							<li>
-								<a href="{{link}}">{{name}}</a>
-							</li>
-						{% endfor %}
-					</ul>
-				</div>
-			</footer>
+      <!-- Footer Links -->
+      <div class="container-fluid text-center text-md-left">
+
+        <!-- Grid row -->
+        <div class="row">
+
+          <!-- Grid column -->
+          <div class="col-md-5 mt-md-0 mt-3">
+            {% load static %}
+            <img src="{% static 'images/qr code attendance logo white.png' %}" style="max-width: 140px;display: block;margin-bottom:12px;margin-left: -6px;"></img>
+            <!-- Content -->
+            <h5 class="text-uppercase text-white">QR Code Attendance System</h5>
+            <p class="text-white">An smart attendance taken over 300+ students.</p>
+            <a href="#">
+              <img src="{% static 'images/google play.png' %}" style="max-width: 220px;margin-left: -16px;margin-top: -12px;">
+              </img>
+          </a>
+          </div>
+          <!-- Grid column -->
+
+          <hr class="clearfix w-100 d-md-none pb-3">
+
+
+      <div class="col-md-7 mt-md-0 mt-3">
+            <!-- Grid column -->
+          <div class="row">
+            <div class="col-md-4 mb-md-0 mb-3" style="text-align: center;">
+              <!--- for space --->
+            </div>
+              <div class="col-md-4 mb-md-0 mb-3" style="text-align: center;">
+              <!--- for space --->
+            </div>
+
+             <div class="col-md-4 mb-md-0 mb-2" style="text-align: center;">
+              <!-- Links -->
+              <h5 style="text-align: center; color: #fff; font-weight: bold;">Explore</h5>
+
+              <ul class="list-unstyled">
+                <li>
+                  <a style="text-align: center; color: #fff;" href="http://codeforces.com/">Codeforces</a>
+                </li>
+                <li>
+                  <a style="text-align: center; color: #fff;" href="https://www.codechef.com/">Codechef</a>
+                </li>
+                <li>
+                  <a style="text-align: center; color: #fff;" href="https://github.com/login">Github </a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- Grid row -->
+
+      </div>
+      <!-- Footer Links -->
+</div>
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">© 2019 Copyright:
+        <a style="color: #fff; font-weight: bold;" href="https://mdbootstrap.com/education/bootstrap/">QR Code Attendance</a>
+      </div>
+      <!-- Copyright -->
+  </footer>
+    <!-- Footer -->
+
 			<!-- End footer-->
 	</body>
 </html>

@@ -2,11 +2,5 @@
 	-webkit-box-shadow: 0 8px 6px -6px #999;
     -moz-box-shadow: 0 8px 6px -6px #999;
     box-shadow: 0 8px 6px -6px #999;
-}
-
-nav{
-	height: 50px;
-	background: #33b5e5;
-	font-size: 18px;
-	color: #fff;
+	background-color: #33b5e5;
 }

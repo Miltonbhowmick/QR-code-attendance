@@ -8,32 +8,56 @@
 {% block main-content %}
 	<div class="row">
 		<div class="col-md-6">	
+			<div class="big-success titleFont">Select course code</div>
 			<div class="shadow-sm p-3 mb-3 bg-white rounded" >
-				<span class="label-success">Select course code</span>
 				<hr></hr>
 				<form method="POST">
 					{% csrf_token %}
 					{% for c in course_code %}		
-					<br>
-					<button class="btn btn-outline-info" type="submit" name="c" value="{{ c }}">{{ c }}</button>
+					<span style="padding: 2px; padding-top:2px;">
+						<button class="btn btn-outline-info" type="submit" name="c" value="{{ c }}">{{ c }}</button>
+					</span>
 					{% endfor %}
-					<br>
 				</form>	
 			</div>
+
+			<div class="big-success titleFont" >Session Performances</div>
+			{% for sheet in all_present_sheets %}
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+					<div class="titleFont" style="font-weight: bold;">
+						{{sheet}}
+					</div>
+					<span class="titleFont">
+						{{teacher}}
+					</span>
+					<hr></hr>
+					<span class="textFont" style="font-size: 18px">
+						{% if percentage %}
+							{{percentage}}%
+						{% else %}
+							No Classes Held
+						{% endif %}
+					</span>
+
+			</div>
+			{% endfor %}
 		</div>
 
+
 		<div class="col-md-6" >
-			<div class="shadow-sm p-3 mb-3 bg-white rounded">
-				<div class="big-success">
+			<div class="big-success titleFont">
 					Session: {{ session.session }}
 				</div>
-				<hr></hr>
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">		
 				<span class="label-success" style="background-color: #08C74E;">
 					Name of students
 				</span>
 				{% for s in course_student %}
-					<hr></hr>
-					<h4>{{s.student_user.first_name}} {{s.student_user.last_name}} </h4>
+					<hr></hr> 
+					<span class="textFont" style="font-size: 16px;">{{s.student_user.first_name}} {{s.student_user.last_name}}
+					</span>
+					<span class="textFont" style="font-size: 16px; float: right;">{{s.student_id}} 
+					</span>
 				{% endfor %}
 	</div>
 </div>

@@ -6,7 +6,15 @@
 
 {% block main-content %}
 
-	<span class="big-success">Course Code: {{course_code}}</span>
+	<div>
+		<span class="big-success titleFont">Course Code: {{course_code}}</span>
+		<span style="float: right;">
+			<form method="POST">
+				{% csrf_token %}
+				<button type="submit" name="delete" value="delete" class="btn btn-outline-info">Delete</button>
+			</form>
+		</span>
+	</div>
 	<hr></hr>
 	<div class="row">
 
@@ -21,10 +29,8 @@
 			  	<form method="POST">
 			    {% for s in session_students %}
 			      <tr>
-				      	{% csrf_token %}
-				        <td><button type="submit" name="s" value="{{s}}" style="background: none;
-	color: blue ;
-	border: none;">{{s}}</button></td>
+				      {% csrf_token %}
+				      <td><button type="submit" name="s" value="{{s}}" style="background: none;color: blue;border: none;">{{s}}</button></td>
 			      </tr>
 			    {% endfor %}
 			    </form>
@@ -56,9 +62,11 @@
 			</table>
 		</div>
 		{% endfor %}
+	</div>
 
-		{% if attend_students.has_other_pages %}
-		  <ul class="pagination">
+<div>	
+	{% if attend_students.has_other_pages %}
+		  <ul class="pagination page" style="padding: 3px;">
 		    {% if attend_students.has_previous %}
 		      <li><a href="?page={{ attend_students.previous_page_number }}">&laquo;</a></li>
 		    {% else %}
@@ -77,8 +85,8 @@
 		      <li class="disabled"><span>&raquo;</span></li>
 		    {% endif %}
 		  </ul>
-	</div>
-{% endif %}
+	{% endif %}
+</div>
 </div>
 
 {% endblock %}

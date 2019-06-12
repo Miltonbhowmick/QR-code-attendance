@@ -408,8 +408,8 @@ class StudentSignUpForm(forms.Form):
 
 		# Converting roll no e.i 01,02,03.... from string value e.i ASH1511001M,BKH1511002F.....
 		str_id = str(student_id)
-		l = len(str_id)-2
-		roll = str_id[l:2:-1]
+		l = len(str_id)
+		roll = str_id[l-3:l-1:1]
 		roll= int(roll)
 
 		deploy2 = StudentProfile(student_id = student_id, student_roll=roll, student_session= student_session)

@@ -4,26 +4,29 @@
 	<title>{{user_details.user.username}} ({{user_details.user.first_name}} {{user_details.user.last_name}})</title>
 {% endblock %}
 
-{% block main-content %}
-
+{% block large %}
+<div class="reContainer">
 	<div class="row" style="box-sizing: inherit;">
-
 		<!-- left part -->
 		<div class="col-md-3" >
 			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
 				<div class="d-flex justify-content-center">
-					<h3>{{user_details.user.first_name}} {{user_details.user.last_name}}</h3>
+					<span class="titleFont" style="font-size: 16px;">
+						{{user_details.user.first_name}} {{user_details.user.last_name}}
+					</span>	
 				</div>
 				<hr></hr>
 				<p class="d-flex justify-content-center"> <!-- center the image -->
 					{% load staticfiles %}
-					<img src="{% static 'images/saifsir.jpg'  %}" class="w3-circle" style="height:106px;width:106px" alt="Avatar">
+					{% if user_details.image %}
+					<img src="{{ user_details.image.url }}" class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
+					{% endif %}
 				</p>
-				<p><i></i>{{ position }}</p>
-				<p><i></i>{{ user_details.city}}, {{ user_details.country}}</p>
-				<p><i></i></p>
+				<p class="textFont"><img src="https://img.icons8.com/dotty/80/000000/working-with-a-laptop.png" style="height:23px;width:23px;"><span class="tab" style="margin-top: 9px;">{{ position }}</span></p>
+				<p class="textFont">{{ user_details.department }}</p>
+				<p class="textFont"><img src="https://img.icons8.com/wired/64/000000/home.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.city}}, {{ user_details.country}}</span></p>
 
-				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</button></a>
+				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</a>
 			</div>
 		</div>
 		<!-- End left part -->
@@ -61,9 +64,36 @@
 					<span class="contentTitle" style="font-size: 18px">
 						{{percentage}}%
 					</span>
-			</div>
 
+			</div>
 				{% endfor %}
+
+	<!--- pagination attendance performance -->
+	<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+		{% if sheets.has_other_pages %}
+		  <ul class="pagination page" style="font-size: 100px;">
+		    {% if sheets.has_previous %}
+		      <li><a href="?page={{ sheets.previous_page_number }}">&laquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&laquo;</span></li>
+		    {% endif %}
+		    {% for i in sheets.paginator.page_range %}
+		      {% if sheets.number == i %}
+		        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		      {% else %}
+		        <li><a href="?page={{ i }}">{{ i }}</a></li>
+		      {% endif %}
+		    {% endfor %}
+		    {% if sheets.has_next %}
+		      <li><a href="?page={{ sheets.next_page_number }}">&raquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&raquo;</span></li>
+		    {% endif %}
+		  </ul>
+	{% endif %}
+</div>
+<!--- End pagination attendance performance --->
+
 		</div>
 		<!-- End middle part -->
 
@@ -85,17 +115,17 @@
 			<!--- End each day attendance --->	
 
 			<!--- Each course attendance --->
-			<div class="big-success titleFont">
-					
+			<div class="big-success titleFont">					
 					Course Present Sheet
 				</div>
 				<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded"style="border: 1px solid #efefef;">
 				
-				<hr></hr>
 				<form method="POST">
 					{% csrf_token %}
 					{% for c in courses %}
-					<button class="btn btn-outline-info" type="submit" name="c" value="{{c}}">{{c}}</button>
+					<div style="padding: 5px; text-align: center;">
+						<button class="btn btn-outline-info" type="submit" name="c" value="{{c}}">{{c}}</button>
+					</div>
 					{% endfor %}
 					<br>
 				</form>	
@@ -105,5 +135,5 @@
 		</div>
 		<!-- End right part -->
 	</div>
-
+</div>
 {% endblock %}

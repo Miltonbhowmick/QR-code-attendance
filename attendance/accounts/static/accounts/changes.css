@@ -1,6 +1,11 @@
 
 .reContainer{
-  width: 85%;
+  margin-top:80px;
+  width: 100%;
+  padding-right: 14px;
+  padding-left: 14px; 
+  margin-right: auto;
+  margin-left: auto;
 }
 .body-tag{
     color: #000 !important;
@@ -56,16 +61,30 @@
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
+.textFont{
+  font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+}
 .contentTitle{
   font-family: Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif; 
   line-height: 1.3;
   color: #333;
   font-size: 18px;
 }
+.tab{
+ margin-left: 10px;
+}
+
+/* */
+.page li{
+  font-size: 30px;
+  padding: 3px;
+}
 
 /* Footer css */
 .pt{
-  padding-top: 60px;
+  padding-top: 40px;
 }
 
 .page-footer{

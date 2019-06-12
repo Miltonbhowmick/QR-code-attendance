@@ -4,11 +4,12 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 import uuid, os
 import datetime
+
 # Create your models here.
 
 class CourseCode(models.Model):
-	teacher1 = models.ForeignKey(User, related_name='teacher1', on_delete=models.SET_NULL, null=True, blank=True)
-	teacher2 = models.ForeignKey(User, related_name='teacher2', on_delete=models.SET_NULL, null=True, blank=True)
+	teacher1 = models.ForeignKey(User, related_name='teacher1', on_delete=models.CASCADE, null=True, blank=True)
+	teacher2 = models.ForeignKey(User, related_name='teacher2', on_delete=models.CASCADE, null=True, blank=True)
 	course_code = models.CharField(max_length= 50, blank=True)
 	session = models.ForeignKey('ClassSession', on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -34,7 +35,7 @@ class UserProfile(models.Model):
 	)
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	phone = models.CharField(max_length= 20, blank=True)
-	image = models.ImageField(upload_to= 'image', blank= True, null= True)
+	image = models.ImageField(upload_to= 'profile_image', blank= True, null= True)
 	# location fields 
 	city = models.CharField(max_length= 50, blank=True)
 	country = models.CharField(max_length = 50, blank=True)
@@ -57,14 +58,12 @@ class PresentSheet(models.Model):
 	select_course_code = models.CharField(max_length= 50, blank=True)
 	select_session = models.CharField(max_length=50, blank= True)
 	random_url = models.CharField(max_length=200, blank= True)
-	
 	""" Another method """
 	# d = str(datetime.datetime.now().time())
 	# d = d.replace(":","-")
 	# d = d.replace(".","-")
 	# join_date = "("+str(datetime.datetime.now().date()) +") ("+ d 
-	""""""
-	
+	""""""	
 	def __str__(self):
 		class_name = str(self.select_course_code) +" ("+ str(self.select_session) +") ("+str(self.join_date)+")"	
 		return class_name
@@ -103,9 +102,11 @@ class StudentProfile(models.Model):
 
 class CoursePercentage(models.Model):
 	student_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
-	course_code = models.ForeignKey(CourseCode, on_delete=models.SET_NULL, blank=True, null=True)
-	session = models.ForeignKey(ClassSession, on_delete=models.SET_NULL, blank=True, null=True)
+	course_code = models.ForeignKey(CourseCode, on_delete=models.CASCADE, blank=True, null=True)
+	session = models.ForeignKey(ClassSession, on_delete=models.CASCADE, blank=True, null=True)
 	percentage = models.IntegerField(null=True)
+
+	teacher_user = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE,null=True)
 
 	def __str__(self):
 		return str(self.student_user.username)+" "+str(self.course_code)

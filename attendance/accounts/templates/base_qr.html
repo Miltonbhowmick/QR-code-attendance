@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% load static %}
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css' %}">
+    <!-- own css -->
+    <link rel="stylesheet" href="{% static 'accounts/navigation-css.css' %}" type="text/css"></link>  
+    <link rel="stylesheet" href="{% static 'accounts/changes.css' %}" type="text/css" ></link>
+    <link rel="stylesheet" href="{% static 'accounts/base_qr.css' %}" type="text/css"></link>
+
+    {% block head %}
+      <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+  </head>
+<body>
+<div id="top">
+  <img src="{% static 'images/base_qr_top.jpg' %}" style="width: 100%;height: 250px;">
+  <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8 main">
+        <div style="text-align: center;">
+            {% load static %}
+                <img src="{% static 'images/qr code attendance logo.png' %}" style="max-width: 140px;margin-top:-40px; "></img>
+                <div style="font-size:4vw;">
+                  QR CODE ATTENDANCE PORTAL
+                </div>  
+                <div class="blocktext">
+                This web portal is not support to all person. Only registered user from higher authority can access.
+                </div>
+        </div>
+      </div>
+      <div class="col-md-2">
+      </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top: 220px;">
+    {% block main-content %}
+        
+    {% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="page-footer font-small pt" style="margin-top: 5%">
+  <!-- Footer Links -->
+  <div class="container-fluid text-center text-md-left">
+    <!-- Grid row -->
+    <div class="row">
+      <!-- Grid column -->
+      <div class="col-md-5 mt-md-0 mt-3">
+        {% load static %}
+        <img src="{% static 'images/qr code attendance logo white.png' %}" style="max-width: 140px;display: block;margin-bottom:12px;margin-left: -6px;"></img>
+        <!-- Content -->
+        <h5 class="text-uppercase text-white">QR Code Attendance System</h5>
+        <p class="text-white">An smart attendance taken over 300+ students.</p>
+        <a href="#">
+          <img src="{% static 'images/google play.png' %}" style="max-width: 220px;margin-left: -16px;margin-top: -12px;">
+          </img>
+        </a>
+      </div>
+    <!-- Grid column -->
+
+    <hr class="clearfix w-100 d-md-none pb-3">
+
+<div class="col-md-7 mt-md-0 mt-3">
+      <!-- Grid column -->
+    <div class="row">
+      <div class="col-md-4 mb-md-0 mb-3" style="text-align: center;">
+        <!--- for space --->
+      </div>
+        <div class="col-md-4 mb-md-0 mb-3" style="text-align: center;">
+        <!--- for space --->
+      </div>
+
+       <div class="col-md-4 mb-md-0 mb-2" style="text-align: center;">
+        <!-- Links -->
+        <h5 style="text-align: center; color: #fff; font-weight: bold;">Explore</h5>
+
+        <ul class="list-unstyled">
+          <li>
+            <a style="text-align: center; color: #fff;" href="http://codeforces.com/">Codeforces</a>
+          </li>
+          <li>
+            <a style="text-align: center; color: #fff;" href="https://www.codechef.com/">Codechef</a>
+          </li>
+          <li>
+            <a style="text-align: center; color: #fff;" href="https://github.com/login">Github </a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Grid row -->
+
+</div>
+    <!-- Footer Links -->
+</div>
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2019 Copyright:
+      <a style="color: #fff; font-weight: bold;" href="https://mdbootstrap.com/education/bootstrap/">QR Code Attendance</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+  <!-- Footer -->
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <script src="{% static 'accounts/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- Optional JavaScript -->
+    {% block optional-js %}
+    {% endblock %}
+  </body>
+</html>

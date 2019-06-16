@@ -10,6 +10,9 @@
 						
 						<form method="post" action="{% url 'accounts:login' %}">	
 							{% csrf_token %}
+							<div class="form-group">
+								{{form.label|safe }}
+							</div>
 							{{form|crispy}}
 							
 							<div class="form-group">

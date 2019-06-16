@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from accounts.forms import RegistrationForm, EditProfileForm, AdditionalInfoForm, StudentSignUpForm 
+from accounts.forms import RegistrationForm, EditProfileForm, AdditionalInfoForm, StudentSignUpForm,LoginForm 
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models  import User
 from .models import ClassSession, CourseCode, UserProfile, StudentProfile, PresentSheet, TeacherProfile, CoursePercentage
 from django.contrib.auth.forms import UserChangeForm, AuthenticationForm, PasswordChangeForm
+
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect
 import os
@@ -43,20 +44,20 @@ def qrcodeattendance(request):
 
     return render(request, 'accounts/qrcodeattendance.html')
 
-
 # @login_not_required
 def login_views(request): 
     if request.user.is_authenticated:
         return redirect('accounts:profile')
 
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request,user)
+            user = form.login(request)
+            if user:
+                login(request,user)
             return redirect('accounts:profile')
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
     return render(request,'accounts/login_form.html',{'form':form})
 # i am not using login_required() because of using Middleware.py which does the same work as login_required()
 
@@ -126,6 +127,7 @@ def view_profile(request):
         return redirect('accounts:student_profile')
 
     class_teacher = TeacherProfile.objects.get(teacher_user=user) 
+    
     present_sheet = class_teacher.class_presentsheet.all().order_by('-id')  # QureySet of all present sheet of teacher
     
     # print(class_teacher.teacher_position)
@@ -195,6 +197,8 @@ def view_profile(request):
 def view_student_profile(request):
     if not request.user.is_authenticated:
         return redirect('accounts:qrcodeattendance')
+
+    """ Get info of student by teacher """
 
     user = request.user
     user_details = UserProfile.objects.get(user= user)
@@ -276,6 +280,86 @@ def view_student_profile(request):
 
     return render(request, 'accounts/student_profile.html',context)
 
+def view_teacher_student_profile(request,student):
+    s = User.objects.get(username=str(student))
+    user_details = UserProfile.objects.get(user=s)
+    student = StudentProfile.objects.get(student_user=s)
+    session = ClassSession.objects.get(session=student.student_session)
+    course_codes = CourseCode.objects.filter(session=session)
+
+    students = StudentProfile.objects.all().order_by('student_roll')
+    session_students = list()
+    for s in students:
+        if s.student_session == str(session):
+            session_students.append(s.student_user.username)
+
+    course_percentages = list()    
+    for course in course_codes:
+        check = list()
+        t1 = course.teacher1
+        t2 = course.teacher2
+
+        if t1:
+            t1_obj = TeacherProfile.objects.get(teacher_user=t1)
+            t1_sheets = t1_obj.class_presentsheet.filter(select_course_code=course).all().count()
+            course_present_sheets = t1_obj.class_presentsheet.filter(select_course_code=course)
+            
+            attend_students = list()
+            for sheet in course_present_sheets:
+                check = list() 
+                student_users = sheet.attend_user.all()
+                for std in student_users:
+                    if std.username in session_students:
+                        check.append(std.username)
+                attend_students.append(check)
+           
+            student_name = str(student)
+            int_percentage=0
+            percentage = 0.00
+            if t1_sheets != 0: 
+                number_of_attend = 0
+                for num in attend_students:
+                    if student_name in num:
+                        number_of_attend +=1
+                percentage = (number_of_attend/t1_sheets)*100
+                percentage = round(percentage,2)
+                int_percentage = int(percentage)
+            course_percentages.append((course,t1,percentage,int_percentage))
+
+        if t2:
+            t2_obj = TeacherProfile.objects.get(teacher_user=t2)
+            t2_sheets = t2_obj.class_presentsheet.filter(select_course_code=course).all().count()
+            course_present_sheets = t2_obj.class_presentsheet.filter(select_course_code=course)
+            
+            attend_students = list()
+            for sheet in course_present_sheets:
+                check = list() 
+                student_users = sheet.attend_user.all()
+                for std in student_users:
+                    if std.username in session_students:
+                        check.append(std.username)
+                attend_students.append(check)
+           
+            student_name = str(student)
+            percentage = 0.00
+            int_percentage=0
+            if t2_sheets != 0: 
+                number_of_attend = 0
+                for num in attend_students:
+                    if student_name in num:
+                        number_of_attend +=1
+                percentage = (number_of_attend/t2_sheets)*100
+                percentage = round(percentage,2)
+
+            int_percentage = int(percentage)
+            course_percentages.append((course,t2,percentage,int_percentage ))
+
+    context = {
+        'course_percentages':course_percentages,
+        'user_details':user_details,
+    }
+
+    return render(request, 'accounts/teacher_student_profile.html',context)
 
 def edit_profile(request):
     if not request.user.is_authenticated:
@@ -313,7 +397,7 @@ def view_session(request, slug):
     sheets = list()
     for course in course_code:
         teacher = TeacherProfile.objects.get(teacher_user=user)
-        all_present_sheets = teacher.class_presentsheet.all().filter(select_session=session)
+        all_present_sheets = teacher.class_presentsheet.all().filter(select_session=session).order_by('-id')
 
     """ Generating QR code for course lecture  """
     if request.method == 'POST':
@@ -355,7 +439,8 @@ def present_sheet(request,random_url):
     session_students = list()
     for s in students:
         if s.student_session == str(present_sheet.select_session):
-            session_students.append(s.student_user.username)
+            session_students.append(s.student_user)
+    total_students = len(session_students)
 
     attend_students = list()
     check = list()
@@ -363,6 +448,11 @@ def present_sheet(request,random_url):
     for student in student_users :
         if student.username in session_students:
             attend_students.append(student.username)
+    total_attends = len(attend_students)
+
+    if request.method == 'POST':
+        delete = request.POST.get('delete')
+        return redirect('accounts:delete_course_attendance_sheet',course_code=present_sheet.select_course_code, random_url=present_sheet.random_url)
 
     link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" +present_sheet.select_session+"/"+ present_sheet.select_course_code +"/qr_code_api"+"/"+ random_url
     context = {
@@ -371,8 +461,25 @@ def present_sheet(request,random_url):
         'attend_students':attend_students,
         'present_sheet': present_sheet,
         'student_user': student_user,
+        'total_students': total_students,
+        'total_attends': total_attends,
     }
     return render(request, 'accounts/present_sheet.html', context)
+
+def delete_course_attendance_sheet(request,course_code, random_url):
+    if request.method == 'POST': 
+        value = request.POST.get('c')
+        if value == "yes":
+            present_sheet = PresentSheet.objects.get(random_url=random_url)
+            present_sheet.delete()
+            return redirect('accounts:profile')
+        else:
+            return redirect('accounts:profile')
+
+    context = {
+    'course_code':course_code,
+    }
+    return render(request,'accounts/delete_course_attendance_sheet.html',context)
 
 # def course_present_sheet(request, course_code):
 #     if not request.user.is_authenticated:

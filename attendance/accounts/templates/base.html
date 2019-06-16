@@ -35,7 +35,7 @@
               <li class="nav-item"><a class="nav-link" href="{% url 'accounts:logout' %}" style="color: #fff;">
               Logout</a></li>
               {% else %}
-              <li><a class="btn btn-primary btn-rounded my-0" href="">Login</a></li>
+              <li><a class="btn btn-primary btn-rounded my-0" href="{% url 'accounts:login' %}">Login</a></li>
               {% endif %}
             </ul>
         </div>

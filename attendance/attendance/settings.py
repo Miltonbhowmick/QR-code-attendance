@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,8 +26,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
+
 
 INSTALLED_APPS = [
     #Third Party App
@@ -36,7 +35,6 @@ INSTALLED_APPS = [
     'rest_framework',
     #Local Apps (Project)
     'accounts',
-
     # admin apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -144,10 +143,12 @@ LOGIN_EXEMPT_URLS = (
 
 )"""
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "miltonbhowmick7@gmail.com"
 EMAIL_HOST_PASSWORD = "milton12345"
+
+AUTHENTICATION_BACKENDS = ['accounts.email_authentication_backends.EmailAuthBackend',
+                           'django.contrib.auth.backends.ModelBackend',]

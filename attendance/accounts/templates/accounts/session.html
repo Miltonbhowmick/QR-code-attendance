@@ -6,6 +6,15 @@
 {% endblock %}
 
 {% block main-content %}
+	<div style="float: right;">
+		<span style="float: right;">
+		<form method="POST">
+			{% csrf_token %}
+			<button type="submit" name="delete" value="delete" class="btn btn-outline-info">Delete</button>
+		</form>
+	</span>			
+	</div>	
+
 	<div class="row">
 		<div class="col-md-6">	
 			<div class="big-success titleFont">Select course code</div>
@@ -21,28 +30,25 @@
 				</form>	
 			</div>
 
-			<div class="big-success titleFont" >Session Performances</div>
-			{% for sheet in all_present_sheets %}
-			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
-					<div class="titleFont" style="font-weight: bold;">
-						{{sheet}}
-					</div>
-					<span class="titleFont">
-						{{teacher}}
-					</span>
-					<hr></hr>
-					<span class="textFont" style="font-size: 18px">
-						{% if percentage %}
-							{{percentage}}%
-						{% else %}
-							No Classes Held
-						{% endif %}
-					</span>
-
+			<div class="pre-scrollable" style="max-height: 600px;"> 
+				<div class="big-success titleFont" >Session Performances</div>
+				{% for sheet in all_present_sheets %}
+				<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+						<div class="titleFont" style="font-weight: bold;">
+							<a href="{{ sheet.get_absolute_url }}" style="color:#333;">{{sheet}}</a>
+						</div>
+						<hr></hr>
+						<span class="textFont" style="font-size: 18px">
+							{% if percentage %}
+								{{percentage}}%
+							{% else %}
+								No Classes Held
+							{% endif %}
+						</span>
+				</div>
+				{% endfor %}
 			</div>
-			{% endfor %}
 		</div>
-
 
 		<div class="col-md-6" >
 			<div class="big-success titleFont">
@@ -54,7 +60,8 @@
 				</span>
 				{% for s in course_student %}
 					<hr></hr> 
-					<span class="textFont" style="font-size: 16px;">{{s.student_user.first_name}} {{s.student_user.last_name}}
+					<span class="textFont" style="font-size: 16px;">
+						<a href="{% url 'accounts:view_teacher_student_profile' s %}" style="color: #333; ">{{s.student_user.first_name}} {{s.student_user.last_name}}</a>
 					</span>
 					<span class="textFont" style="font-size: 16px; float: right;">{{s.student_id}} 
 					</span>

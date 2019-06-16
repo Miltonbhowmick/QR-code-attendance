@@ -34,10 +34,12 @@ urlpatterns = [
     path('qrcodeattendance/student_signup/', views.student_signup, name='student_signup'),
     path('qrcodeattendance/profile/', views.view_profile, name='profile'), # for teacher
     path('qrcodeattendance/student_profile/', views.view_student_profile, name='student_profile'), # for teacher
+    re_path('qrcodeattendance/teacher/(?P<student>[a-zA-Z0-9-_]+)/$', views.view_teacher_student_profile, name='view_teacher_student_profile'),
     path('qrcodeattendance/edit_profile/',views.edit_profile, name='edit_profile'), # for edit profile  
     
     #Delete urls
-    re_path('qrcodeattendance/profile/delete/(?P<course_code>[a-zA-Z0-9-_]+)/$', views.delete_course_attendance_details, name='delete_course_attendance_details'),
+    re_path('qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/delete/', views.delete_course_attendance_details, name='delete_course_attendance_details'),
+    re_path('qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/(?P<random_url>[a-zA-Z0-9_]+)/sheet-delete', views.delete_course_attendance_sheet, name='delete_course_attendance_sheet'),
 
     re_path('^qrcodeattendance/profile/(?P<random_url>[a-zA-Z0-9-_]+)/$', views.present_sheet, name='present_sheet'), 
     re_path('^qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/(?P<session>[a-zA-Z0-9-_]+)/(?P<student>[a-zA-Z0-9-_]+)/$',views.course_percentage, name='course_percentage'),

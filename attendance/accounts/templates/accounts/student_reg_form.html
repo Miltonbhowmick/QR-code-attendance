@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -29,58 +31,10 @@
                   {% csrf_token %}
                   <h5 class="text-center">Student SignUp</h5>
                   <p class="hint-text">Create your account. It's free and takes just a minute.</p>
-
-                  <div class="row">
-                    <div class="col-md-6 col-xs-12">
-                      <div class="form-group">
-                        {{ form.first_name }}
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-xs-12">
-                      <div class="form-group">   
-                        {{ form.last_name }}
-                      </div> 
-                    </div>     
-                  </div>
-                   <div class="form-group">
-                  	{{ form.student_id }}
-                  </div>
                   <div class="form-group">
-                    {{ form.username }}
+                    {{form.label|safe}}
                   </div>
-
-                  <div class="form-group">
-                    {{ form.email }}
-                  </div>
-
-                  <div class="form-group">
-                    {{ form.password1 }}
-                  </div>
-                  <div class="form-group">
-                    {{ form.password2 }}
-                  </div>        
-                <h5>Session: </h5>
-                  <div class="form-group">
-                    {{ form.student_session }}
-                  </div>
-                  <h5>Department: </h5>
-                  <div class="form-group">
-                    {% for choice in form.department %}
-                      <span class="radio" id="{{ forloop.counter }}">
-                        {{ choice.tag }}
-                      </span>
-                      {{ choice.choice_label }}
-                      <br>
-                    {% endfor %}
-                  </div>
-
-                  <div class="form-group">
-                    <div class="col-md-6">
-                      {{ form.user_type }}
-                    </div>
-                  </div>
-
-
+                  {{form|crispy}}
                   <div class="row">
                     <div class="col-md-3 col-xs-12">
                       <div class="form-group">

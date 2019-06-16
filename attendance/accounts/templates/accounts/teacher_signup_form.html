@@ -1,3 +1,5 @@
+
+  {% load crispy_forms_tags %}
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -8,7 +10,6 @@
         <title>Teacher SignUp</title>
 
         {% load static %}
-
         <link rel="stylesheet" href="{% static 'accounts/bootstrap/css/bootstrap.min.css'%}" crossorigin="anonymous"></link>
         <!-- teacher form css --->
         <link rel="stylesheet" href="{% static 'accounts/teacher_signup_form.css' %}" type="text/css">
@@ -30,70 +31,16 @@
                   {% csrf_token %}
                   <h5 class="text-center">Teacher SignUp</h5>
                   <p class="hint-text">Create your account. It's free and takes just a minute.</p>
-
-                  <div class="row">
-                    <div class="col-md-6 col-xs-12">
-                      <div class="form-group">
-                        {{ form.first_name }}
-                      </div>
+                    <div class="form-group">
+                      {{form.label| safe}}
                     </div>
-                    <div class="col-md-6 col-xs-12">
-                      <div class="form-group">   
-                        {{ form.last_name }}
-                      </div> 
-                    </div>     
-                  </div>
-
-                  <div class="form-group">
-                    {{ form.username }}
-                  </div>
-
-                  <div class="form-group">
-                    {{ form.email }}
-                  </div>
-
-                  <div class="form-group">
-                    {{ form.password1 }}
-                  </div>
-                  <div class="form-group">
-                    {{ form.password2 }}
-                  </div>        
-                <h5>Position: </h5>
-                  <div class="form-group">
-                    <label class="checkbox-inline">
-                      {% for choice in form.teacher_position %}
-                        <span class="radio" id="{{ forloop.counter }}">
-                          {{ choice.tag }}
-                        </span>
-                        {{ choice.choice_label }}
-                        <br>
-                      {% endfor %}
-                    </label>
-                  </div>
-                  <h5>Department: </h5>
-                  <div class="form-group">
-                    {% for choice in form.department %}
-                      <span class="radio" id="{{ forloop.counter }}">
-                        {{ choice.tag }}
-                      </span>
-                      {{ choice.choice_label }}
-                      <br>
-                    {% endfor %}
-                  </div>
-
-                  <div class="form-group">
-                    <div class="col-md-6">
-                      {{ form.user_type }}
-                    </div>
-                  </div>
-
-
-                  <div class="row">
+                    {{form|crispy}}      
+                    <div class="row">
                     <div class="col-md-3 col-xs-12">
                       <div class="form-group">
                         <input type="submit" value="SignUp" class="btn btn-outline-info" tabindex="7">
                       </div>
-                    </div>
+                    </div>            
                     <div class="col-md-3 col-xs-12">
                       <div class="form-group">
                         <a href="{% url 'accounts:login' %}" class="btn btn-outline-info" >Login</a>

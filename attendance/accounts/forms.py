@@ -7,6 +7,50 @@ from django.db.models import Q
 import re
 import os
 
+from django.contrib.auth import authenticate
+
+class LoginForm(forms.Form):
+
+	email 	= forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
+		widget = forms.TextInput(
+			attrs = {
+					'class': 'form-control', 
+					'type': 'email',
+					'name': 'email',
+					'placeholder': 'email',
+			}
+		)
+	)
+
+	password	= forms.CharField(max_length=20, required=False, widget=forms.PasswordInput(
+		attrs={'class':'form-control', 'placeholder':'Password'}))
+
+
+	def clean(self):
+		email = self.cleaned_data.get('email')
+		password = self.cleaned_data.get('password')
+
+		if len(str(email)) < 1:
+			raise forms.ValidationError("Enter email!")
+		else:
+			if len(password) < 8:
+				raise forms.ValidationError("Password is too short!")
+			else:
+				user = authenticate(username=email, password=password)
+				if not user or not user.is_active:
+					raise forms.ValidationError("Email or password not match!")
+
+		return self.cleaned_data
+
+	def login(self, request):
+		email = self.cleaned_data.get('email')
+		password = self.cleaned_data.get('password')
+
+		user = authenticate(username=email, password=password)
+
+		return user
+
+
 class RegistrationForm(forms.Form):
 
 	POSITION_CHOICE = (
@@ -24,7 +68,7 @@ class RegistrationForm(forms.Form):
 	)
 	user_type = forms.CharField(
 		max_length= 20,
-		help_text= 'Optional.',
+		help_text= 'Non-editable',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -38,8 +82,8 @@ class RegistrationForm(forms.Form):
 	)
 	username = forms.CharField(
 		max_length=30, 
-		required=False, 
-		help_text='Optional.',
+		required=True, 
+		help_text='Enter a username',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -52,8 +96,8 @@ class RegistrationForm(forms.Form):
 		)
 	first_name = forms.CharField(
 		max_length=30, 
-		required=False, 
-		help_text='Optional.',
+		required=True, 
+		help_text='Enter your first name e.g "Milton Chandra Bhowmick" first_name="Milton Chandro"',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -66,8 +110,8 @@ class RegistrationForm(forms.Form):
 		)
 	last_name = forms.CharField(
 		max_length=30, 
-		required=False, 
-		help_text='Optional.',
+		required=True, 
+		help_text='Enter your first name e.g "Milton Chandra Bhowmick" last_name="Bhowmick"',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -89,24 +133,24 @@ class RegistrationForm(forms.Form):
 			}
 		)
 	)
-	password1 = forms.CharField(max_length=20, required=True, 
+	password = forms.CharField(max_length=20, required=True, 
 
 		widget = forms.PasswordInput(
 			attrs = {
 					'class': 'form-control', 
 					'type': 'password',
-					'name': 'password1',
+					'name': 'password',
 					'placeholder': 'password',
 			}
 		)
 	)
-	password2 = forms.CharField(max_length=20, required=True,
+	password_confirm = forms.CharField(max_length=20, required=True,
 
 		widget = forms.PasswordInput(
 			attrs = {
 					'class': 'form-control', 
 					'type': 'password',
-					'name': 'password2',
+					'name': 'password_confirm',
 					'placeholder': 'confirm password',
 			}
 		)
@@ -126,8 +170,8 @@ class RegistrationForm(forms.Form):
 		first_name = self.cleaned_data.get('first_name')
 		last_name = self.cleaned_data.get('last_name')
 		email = self.cleaned_data.get('email')
-		password1 = self.cleaned_data.get('password1')
-		password2 = self.cleaned_data.get('password2')
+		password = self.cleaned_data.get('password')
+		password_confirm = self.cleaned_data.get('password_confirm')
 		teacher_position = self.cleaned_data.get('teacher_position')
 		department = self.cleaned_data.get('department')
 		if len(username) < 1:
@@ -153,10 +197,10 @@ class RegistrationForm(forms.Form):
 							if email_exist:
 								raise forms.ValidationError("Email already exist!")
 							else:
-								if len(password1) < 8:
+								if len(password) < 8:
 									raise forms.ValidationError("Password is too short!")
 								else:
-									if password1 != password2:
+									if password != password_confirm:
 										raise forms.ValidationError("Password not matched!")
 
 
@@ -171,14 +215,14 @@ class RegistrationForm(forms.Form):
 		first_name = self.cleaned_data.get('first_name')
 		last_name = self.cleaned_data.get('last_name')
 		email = self.cleaned_data.get('email')
-		password1 = self.cleaned_data.get('password1')
-		password2 = self.cleaned_data.get('password2')
+		password = self.cleaned_data.get('password')
+		password_confirm = self.cleaned_data.get('password_confirm')
 		teacher_position = self.cleaned_data.get('teacher_position')
 		department = self.cleaned_data.get('department')
 
 		deploy1 = User(username=username, first_name=first_name, last_name=last_name, 
 			email=email)
-		deploy1.set_password(password1)
+		deploy1.set_password(password)
 		deploy1.save()
 
 		# print(deploy1)
@@ -193,10 +237,10 @@ class RegistrationForm(forms.Form):
 
 # Additional information for users
 class AdditionalInfoForm(forms.ModelForm):
-	phone = forms.CharField(max_length=20, required = False)
-	image = forms.ImageField( required = False)
-	city = forms.CharField(max_length=50, required=False)
-	country = forms.CharField(max_length=50, required=False)
+	phone = forms.CharField(max_length=20, required = False, help_text='Enter your phone number')
+	image = forms.ImageField( required = False, help_text='Upload your image')
+	city = forms.CharField(max_length=50, required=False, help_text='Enter your city e.g "Dhaka","Tangail","Noakhali"')
+	country = forms.CharField(max_length=50, required=False, help_text='Enter country')
 	def clean(self):
 		phone = self.cleaned_data.get('phone')
 		image = self.cleaned_data.get('image')
@@ -224,7 +268,7 @@ class StudentSignUpForm(forms.Form):
 	)
 	user_type = forms.CharField(
 		max_length= 20,
-		help_text= 'Optional.',
+		help_text= 'Non-editable',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -238,7 +282,7 @@ class StudentSignUpForm(forms.Form):
 	)
 	student_id = forms.CharField(
 		max_length= 20,
-		help_text= 'Optional.',
+		help_text= 'Enter a student_id (Must be concern to fill it Otherwise you will not count)',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -252,7 +296,7 @@ class StudentSignUpForm(forms.Form):
 	username = forms.CharField(
 		max_length=30, 
 		required=False, 
-		help_text='Optional.',
+		help_text='Enter a username',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -266,7 +310,7 @@ class StudentSignUpForm(forms.Form):
 	first_name = forms.CharField(
 		max_length=30, 
 		required=False, 
-		help_text='Optional.',
+		help_text='Enter your first name e.g "Milton Chandra Bhowmick" first_name="Milton Chandro"',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -280,7 +324,7 @@ class StudentSignUpForm(forms.Form):
 	last_name = forms.CharField(
 		max_length=30, 
 		required=False, 
-		help_text='Optional.',
+		help_text='Enter your first name e.g "Milton Chandra Bhowmick" last_name="Bhowmick"',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -302,24 +346,24 @@ class StudentSignUpForm(forms.Form):
 			}
 		)
 	)
-	password1 = forms.CharField(max_length=20, required=True, 
+	password = forms.CharField(max_length=20, required=True, 
 
 		widget = forms.PasswordInput(
 			attrs = {
 					'class': 'form-control', 
 					'type': 'password',
-					'name': 'password1',
+					'name': 'password',
 					'placeholder': 'password',
 			}
 		)
 	)
-	password2 = forms.CharField(max_length=20, required=True,
+	password_confirm = forms.CharField(max_length=20, required=True,
 
 		widget = forms.PasswordInput(
 			attrs = {
 					'class': 'form-control', 
 					'type': 'password',
-					'name': 'password2',
+					'name': 'password_confirm',
 					'placeholder': 'confirm password',
 			}
 		)
@@ -333,7 +377,7 @@ class StudentSignUpForm(forms.Form):
 
 	#class Meta:
 	#	model = User
-	#	fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+	#	fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password_confirm', )
 
 	def check_space(self, username):
 		for x in username:
@@ -348,8 +392,8 @@ class StudentSignUpForm(forms.Form):
 		first_name = self.cleaned_data.get('first_name')
 		last_name = self.cleaned_data.get('last_name')
 		email = self.cleaned_data.get('email')
-		password1 = self.cleaned_data.get('password1')
-		password2 = self.cleaned_data.get('password2')
+		password = self.cleaned_data.get('password')
+		password_confirm = self.cleaned_data.get('password_confirm')
 		student_session = self.cleaned_data.get('student_session')
 		department = self.cleaned_data.get('department')
 	
@@ -377,10 +421,10 @@ class StudentSignUpForm(forms.Form):
 							if email_exist:
 								raise forms.ValidationError("Email already exist!")
 							else:
-								if len(password1) < 8:
+								if len(password) < 8:
 									raise forms.ValidationError("Password is too short!")
 								else:
-									if password1 != password2:
+									if password != password_confirm:
 										raise forms.ValidationError("Password not matched!")
 
 	def deploy(self):
@@ -396,14 +440,14 @@ class StudentSignUpForm(forms.Form):
 		first_name = self.cleaned_data.get('first_name')
 		last_name = self.cleaned_data.get('last_name')
 		email = self.cleaned_data.get('email')
-		password1 = self.cleaned_data.get('password1')
-		password2 = self.cleaned_data.get('password2')
+		password = self.cleaned_data.get('password')
+		password_confirm = self.cleaned_data.get('password_confirm')
 		student_session = self.cleaned_data.get('student_session')
 		department = self.cleaned_data.get('department')
 		
 		deploy1 = User(username=username, first_name=first_name, last_name=last_name, 
 			email=email)
-		deploy1.set_password(password1)
+		deploy1.set_password(password)
 		deploy1.save()
 
 		# Converting roll no e.i 01,02,03.... from string value e.i ASH1511001M,BKH1511002F.....

@@ -54,7 +54,7 @@
 
 				{% for teacher,percentage, sheet in sheets %}
 			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
-					<div class="contentTitle" style="font-weight: bold;">
+					<div class="titleFont" style="font-weight: bold;">
 						{{sheet}}
 					</div>
 					<span class="contentTitle">
@@ -118,8 +118,9 @@
 			<div class="big-success titleFont">					
 					Course Present Sheet
 				</div>
+
 				<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded"style="border: 1px solid #efefef;">
-				
+				<hr></hr>
 				<form method="POST">
 					{% csrf_token %}
 					{% for c in courses %}

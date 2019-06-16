@@ -186,22 +186,34 @@ class RegistrationForm(forms.Form):
 				if user_exist:
 					raise forms.ValidationError("Username already taken!")
 				else:
-					if len(email) < 1:
-						raise forms.ValidationError("Enter email address!")
+					if not first_name:
+						raise forms.ValidationError("Enter your first name!")
 					else:
-						email_correction = re.match('^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$', email)
-						if email_correction == None:
-							raise forms.ValidationError("Email not correct!")
+						if not last_name:
+							raise forms.ValidationError("Enter your last name!")
 						else:
-							email_exist = User.objects.filter(email__iexact=email).exists()
-							if email_exist:
-								raise forms.ValidationError("Email already exist!")
+							if len(email) < 1:
+								raise forms.ValidationError("Enter email address!")
 							else:
-								if len(password) < 8:
-									raise forms.ValidationError("Password is too short!")
+								email_correction = re.match('^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$', email)
+								if email_correction == None:
+									raise forms.ValidationError("Email not correct!")
 								else:
-									if password != password_confirm:
-										raise forms.ValidationError("Password not matched!")
+									email_exist = User.objects.filter(email__iexact=email).exists()
+									if email_exist:
+										raise forms.ValidationError("Email already exist!")
+									else:
+										if len(password) < 4:
+											raise forms.ValidationError("Password is too short!")
+										else:
+											if password != password_confirm:
+												raise forms.ValidationError("Password not matched!")
+											else:
+												if not teacher_position:
+													raise forms.ValidationError("Please select your position")
+												else:
+													if not department:
+														raise forms.ValidationError("Please select your department")
 
 
 	def deploy(self):
@@ -282,6 +294,7 @@ class StudentSignUpForm(forms.Form):
 	)
 	student_id = forms.CharField(
 		max_length= 20,
+		required = True,
 		help_text= 'Enter a student_id (Must be concern to fill it Otherwise you will not count)',
 
 		widget = forms.TextInput(
@@ -309,7 +322,7 @@ class StudentSignUpForm(forms.Form):
 		)
 	first_name = forms.CharField(
 		max_length=30, 
-		required=False, 
+		required=True, 
 		help_text='Enter your first name e.g "Milton Chandra Bhowmick" first_name="Milton Chandro"',
 
 		widget = forms.TextInput(
@@ -323,7 +336,7 @@ class StudentSignUpForm(forms.Form):
 		)
 	last_name = forms.CharField(
 		max_length=30, 
-		required=False, 
+		required=True, 
 		help_text='Enter your first name e.g "Milton Chandra Bhowmick" last_name="Bhowmick"',
 
 		widget = forms.TextInput(
@@ -335,7 +348,7 @@ class StudentSignUpForm(forms.Form):
 			}
 		)
 	)
-	email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
+	email = forms.EmailField(max_length=254, required=True, help_text='Required. Inform a valid email address.',
 
 		widget = forms.TextInput(
 			attrs = {
@@ -398,34 +411,49 @@ class StudentSignUpForm(forms.Form):
 		department = self.cleaned_data.get('department')
 	
 
-		if len(username) < 1:
-			raise forms.ValidationError("Enter username!")
+		if len(student_id)<10:
+			raise forms.ValidationError("Your ID is short. Check it again!")
 		else:
-			check_username_space = self.check_space(username)
-
-			if check_username_space:
-				raise forms.ValidationError('You can not use space in username!')
+			hall = str(student_id)
+			s = hall[0:3]
+			if s!="ASH" and s!="BKH":
+				raise forms.ValidationError("Student ID:'ASH' if you are male or 'BKH' if you are female")
 			else:
-				user_exist = User.objects.filter(username__iexact=username).exists()
-				if user_exist:
-					raise forms.ValidationError("Username already taken!")
+				if len(username) < 1:
+					raise forms.ValidationError("Enter username!")
 				else:
-					if len(email) < 1:
-						raise forms.ValidationError("Enter email address!")
+					check_username_space = self.check_space(username)
+
+					if check_username_space:
+						raise forms.ValidationError('You can not use space in username!')
 					else:
-						email_correction = re.match('^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$', email)
-						if email_correction == None:
-							raise forms.ValidationError("Email not correct!")
+						user_exist = User.objects.filter(username__iexact=username).exists()
+						if user_exist:
+							raise forms.ValidationError("Username already taken!")
 						else:
-							email_exist = User.objects.filter(email__iexact=email).exists()
-							if email_exist:
-								raise forms.ValidationError("Email already exist!")
+							if len(email) < 1:
+								raise forms.ValidationError("Enter email address!")
 							else:
-								if len(password) < 8:
-									raise forms.ValidationError("Password is too short!")
+								email_correction = re.match('^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$', email)
+								if email_correction == None:
+									raise forms.ValidationError("Email not correct!")
 								else:
-									if password != password_confirm:
-										raise forms.ValidationError("Password not matched!")
+									email_exist = User.objects.filter(email__iexact=email).exists()
+									if email_exist:
+										raise forms.ValidationError("Email already exist!")
+									else:
+										if len(password) < 8:
+											raise forms.ValidationError("Password is too short!")
+										else:
+											if password != password_confirm:
+												raise forms.ValidationError("Password not matched!")
+											else:
+												if not student_session:
+													raise forms.ValidationError("Please select your session!")
+												else:
+													if not department:
+														raise forms.ValidationError("Please select your department!")
+
 
 	def deploy(self):
 		DEPARTMENT = (

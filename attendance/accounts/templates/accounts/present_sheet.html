@@ -30,13 +30,13 @@
 				<hr></hr>
 				<p style="text-align:left; margin-left: 50px;">
 					<span class="textFont">
-						{{s.first_name}} {{s.last_name}}
+						{{s}}
 					</span>					
 					{% if s in attend_students %}
 					<span style="float:right; margin-right: 50px;">
-						<i style="font-weight: bold; color: green;">P</i>
+						<i style="font-weight: bold; color: #08C74E;">P</i>
 					</span>
-					{% elif s not in attend_students %}
+					{% else %}
 						<span style="float:right; margin-right: 50px;">
 							<i style="font-weight: bold; color: red;">A</i>
 						</span>

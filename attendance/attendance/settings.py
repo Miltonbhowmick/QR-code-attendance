@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     #Third Party App
     'crispy_forms',
     'rest_framework',
+    'rest_framework.authtoken',
     #Local Apps (Project)
     'accounts',
     # admin apps

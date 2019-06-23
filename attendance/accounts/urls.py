@@ -5,7 +5,7 @@ from .models import PresentSheet
 from rest_framework.routers import DefaultRouter
 from django.urls import reverse_lazy
 
-# attendance_api_link object
+# attendance_api_link object  !!! Will be bugged!!!
 obj = PresentSheet.objects.all()
 if obj.exists():
     a = PresentSheet.objects.last()
@@ -32,6 +32,7 @@ urlpatterns = [
     path('', auth_views.LogoutView.as_view(next_page='qrcodeattendance/'), name='logout'),
     path('qrcodeattendance/signup/', views.register, name='signup'), # for teacher
     path('qrcodeattendance/student_signup/', views.student_signup, name='student_signup'),
+    path('qrcodeattendance/admin_profile/',views.view_admin_profile, name='view_admin_profile'),
     path('qrcodeattendance/profile/', views.view_profile, name='profile'), # for teacher
     path('qrcodeattendance/student_profile/', views.view_student_profile, name='student_profile'), # for teacher
     re_path('qrcodeattendance/teacher/(?P<student>[a-zA-Z0-9-_]+)/$', views.view_teacher_student_profile, name='view_teacher_student_profile'),

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from accounts.forms import RegistrationForm, EditProfileForm, AdditionalInfoForm, StudentSignUpForm,LoginForm 
+from accounts.forms import RegistrationForm, EditProfileForm, AdditionalInfoForm, StudentSignUpForm,LoginForm,CourseCodeForm,ClassSessionForm
 from django.db.models import Q
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models  import User
@@ -105,6 +105,8 @@ def generate_uuid():
 def view_profile(request):  
     if not request.user.is_authenticated:
         return redirect('accounts:qrcodeattendance')
+    if request.user.is_superuser:   
+        return redirect('accounts:view_admin_profile')
 
     POSITION_CHOICE = (
         (1,'Lecturer'),
@@ -193,6 +195,45 @@ def view_profile(request):
         'sheets':sheets,
     }
     return render(request, 'accounts/profile.html', context)
+
+def view_admin_profile(request):
+    user_details = User.objects.get(username=request.user)
+    course_codes = None
+    sessions = ClassSession.objects.all();
+    course_details = None;
+
+    """ Course Code form """
+    course_form = CourseCodeForm(request.POST or None)
+    session_form = ClassSessionForm(request.POST or None)
+    course_details = None;
+    if request.method == 'POST':
+        course =  request.POST.get('c')
+        session = request.POST.get('s')
+        if not course and not session:  
+            cc = request.POST.get('cc')
+            ss = request.POST.get('ss')
+            if cc:
+                if course_form.is_valid():
+                    course_form.deploy()
+            else:
+                if session_form.is_valid():
+                    session_form.deploy()
+        else:
+            if session:
+                s = ClassSession.objects.get(session=session)
+                course_codes = CourseCode.objects.filter(session=s)
+            else:    
+                course_details = CourseCode.objects.get(course_code=course); 
+                print(course_details)
+    context = {
+        'course_form':course_form,
+        'session_form':session_form,
+        'course_details':course_details,
+        'sessions':sessions,
+        'course_codes':course_codes,
+        'user_details':user_details,
+    }
+    return render(request,'accounts/admin_profile.html',context)
 
 def view_student_profile(request):
     if not request.user.is_authenticated:
@@ -324,7 +365,19 @@ def view_teacher_student_profile(request,student):
                 percentage = (number_of_attend/t1_sheets)*100
                 percentage = round(percentage,2)
                 int_percentage = int(percentage)
-            course_percentages.append((course,t1,percentage,int_percentage))
+            marks = 0
+            if percentage >=90:
+                marks = 5
+            elif percentage >=80 and percentage<90:
+                marks = 4
+            elif percentage >=70 and percentage<80:
+                marks = 3
+            elif percentage >=60 and percentage<70:
+                marks = 2
+            elif percentage <60:
+                marks = 0
+
+            course_percentages.append((course,t1,percentage,int_percentage,marks))
 
         if t2:
             t2_obj = TeacherProfile.objects.get(teacher_user=t2)
@@ -343,6 +396,7 @@ def view_teacher_student_profile(request,student):
             student_name = str(student)
             percentage = 0.00
             int_percentage=0
+            marks = 0
             if t2_sheets != 0: 
                 number_of_attend = 0
                 for num in attend_students:
@@ -352,7 +406,19 @@ def view_teacher_student_profile(request,student):
                 percentage = round(percentage,2)
 
             int_percentage = int(percentage)
-            course_percentages.append((course,t2,percentage,int_percentage ))
+            marks = 0
+            if percentage >=90:
+                marks = 5
+            elif percentage >=80 and percentage<90:
+                marks = 4
+            elif percentage >=70 and percentage<80:
+                marks = 3
+            elif percentage >=60 and percentage<70:
+                marks = 2
+            elif percentage <60:
+                marks = 0
+
+            course_percentages.append((course,t2,percentage,int_percentage,marks))
 
     context = {
         'course_percentages':course_percentages,
@@ -439,22 +505,29 @@ def present_sheet(request,random_url):
     session_students = list()
     for s in students:
         if s.student_session == str(present_sheet.select_session):
-            session_students.append(s.student_user)
+            name = s.student_user.first_name+" "+s.student_user.last_name
+            session_students.append(name)
     total_students = len(session_students)
 
     attend_students = list()
-    check = list()
+    check = list()  
     student_users = present_sheet.attend_user.all()
     for student in student_users :
-        if student.username in session_students:
-            attend_students.append(student.username)
+        name = student.first_name+" "+student.last_name
+        if name in session_students:
+            attend_students.append(name)
+
+            print(attend_students)
     total_attends = len(attend_students)
+
+    # for s in attend_students:   
+    #     print(type(s))
 
     if request.method == 'POST':
         delete = request.POST.get('delete')
         return redirect('accounts:delete_course_attendance_sheet',course_code=present_sheet.select_course_code, random_url=present_sheet.random_url)
 
-    link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" +present_sheet.select_session+"/"+ present_sheet.select_course_code +"/qr_code_api"+"/"+ random_url
+    link = "http://192.168.0.111:8000/qrcodeattendance/profile/session/" +present_sheet.select_session+"/"+ present_sheet.select_course_code +"/qr_code_api"+"/"+ random_url
     context = {
         'link':link,
         'session_students':session_students,
@@ -643,7 +716,7 @@ def view_qr_code(request, slug, course_code, random_url):
     Example: http://127.0.0.1:8000/profile/session/2015-16/ICE-1101/qr_code/5380c2eba11158223369c68a/
     slug, course_code, random_url are string
     """
-    link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code_api"+"/"+ random_url
+    link = "http://192.168.0.111:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code_api"+"/"+ random_url
     refresh_link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code"+"/"+ random_url
     print(link)
     context = {
@@ -662,8 +735,21 @@ def course_percentage(request, course_code, session, student):
     user = User.objects.get(username=student)
     course_percentage = CoursePercentage.objects.get(student_user=user,course_code__course_code=course_code,session__session=session)
     int_course_percentage = int(course_percentage.percentage)
-    print(int_course_percentage)
+    percentage = course_percentage.percentage
+    marks = 0
+    if percentage >=90:
+        marks = 5
+    elif percentage >=80 and percentage<90:
+        marks = 4
+    elif percentage >=70 and percentage<80:
+        marks = 3
+    elif percentage >=60 and percentage<70:
+        marks = 2
+    elif percentage <60:
+        marks = 0
+
     context = {
+        'marks':marks,
         'int_course_percentage':int_course_percentage,
         'course_percentage': course_percentage,
     }
@@ -788,7 +874,7 @@ class AttendanceSheetView(APIView):
         presentsheet.save()
         presentsheet.attend_user.add(user)
 
-        return Response()    
+        return redirect('accounts:profile')    
 
 class CoursePresentSheetViewSet(viewsets.ModelViewSet):
     queryset = PresentSheet.objects.all()

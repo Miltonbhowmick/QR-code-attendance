@@ -9,6 +9,52 @@ import os
 
 from django.contrib.auth import authenticate
 
+
+#Admin forms 
+
+class ClassSessionForm(forms.Form):
+	session = forms.CharField(max_length=222, help_text="e.g Session : 2014-15, 2015-16, 2020-21, 2023-24...")
+
+	def clean(self):
+		session = self.cleaned_data.get('session')
+		session_check = ClassSession.objects.filter(session=session)
+		if session_check.exists():
+			raise forms.ValidationError("This session is already exists!")
+	def deploy(self):
+		session = self.cleaned_data.get('session')
+		deploy = ClassSession(session=session, slug=session)
+		deploy.save()
+
+class CourseCodeForm(forms.Form):
+	session = forms.ModelChoiceField(queryset=ClassSession.objects.all(), to_field_name='session')
+	course_code = forms.CharField(max_length=222, help_text="e.g Course Code: ICE-4204, ICE-4102, ICE-3103, ICE-3204...")
+	teacher1 = forms.ModelChoiceField(queryset= TeacherProfile.objects.all(), to_field_name='teacher_user', required= False)
+	teacher2 = forms.ModelChoiceField(queryset= TeacherProfile.objects.all(), to_field_name='teacher_user', required= False)
+	
+	def clean(self):
+		session = self.cleaned_data.get('session')
+		course_code = self.cleaned_data.get('course_code')
+		teacher1 = self.cleaned_data.get('teacher1')
+		teacher2 = self.cleaned_data.get('teacher2')
+
+		course_check = CourseCode.objects.filter(session=session, course_code=course_code)
+		if course_check.exists():
+			raise forms.ValidationError("This Course Code is already exists in session!")
+	
+	def deploy(self):
+		session = self.cleaned_data.get('session')
+		course_code = self.cleaned_data.get('course_code')
+		teacher1 = self.cleaned_data.get('teacher1')
+		teacher2 = self.cleaned_data.get('teacher2')
+
+		t1 = User.objects.get(username=teacher1)
+		t2 = User.objects.get(username=teacher2)
+
+		course = CourseCode(session=session, course_code= course_code, teacher1=t1,teacher2=t2)
+		course.save()
+
+#Login form
+
 class LoginForm(forms.Form):
 
 	email 	= forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.',
@@ -50,6 +96,7 @@ class LoginForm(forms.Form):
 
 		return user
 
+#User forms
 
 class RegistrationForm(forms.Form):
 
@@ -133,7 +180,7 @@ class RegistrationForm(forms.Form):
 			}
 		)
 	)
-	password = forms.CharField(max_length=20, required=True, 
+	password = forms.CharField(max_length=20, required=True, help_text="Password should be 8 characters e.g digits and alpha characters (a,b,c,A,B...))", 
 
 		widget = forms.PasswordInput(
 			attrs = {
@@ -359,7 +406,7 @@ class StudentSignUpForm(forms.Form):
 			}
 		)
 	)
-	password = forms.CharField(max_length=20, required=True, 
+	password = forms.CharField(max_length=20, required=True,  help_text="Password should be 8 characters e.g digits and alpha characters (a,b,c,A,B...))",
 
 		widget = forms.PasswordInput(
 			attrs = {

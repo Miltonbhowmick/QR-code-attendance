@@ -62,6 +62,7 @@
   text-transform: uppercase;
 }
 .textFont{
+  color:#333;
   font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
   letter-spacing: 0.5px;
   text-transform: capitalize;
@@ -75,6 +76,12 @@
 .tab{
  margin-left: 10px;
 }
+.logo{
+  height: 35px;
+  width: 90px;
+  vertical-align: middle;
+}
+
 
 /* */
 .page li{
@@ -117,4 +124,12 @@
   padding: 10px 4px 0;
   background: #111;
   color: #fff;
+}
+
+/* */
+.admin-course{
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
 }

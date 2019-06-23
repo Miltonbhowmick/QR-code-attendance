@@ -8,7 +8,7 @@
 <div class="reContainer">
 	<div class="row" style="box-sizing: inherit;">
 		<!-- left part -->
-		<div class="col-md-3" >
+		<div class="col-md-3">
 			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
 				<div class="d-flex justify-content-center">
 					<span class="titleFont" style="font-size: 16px;">
@@ -20,12 +20,15 @@
 					{% load staticfiles %}
 					{% if user_details.image %}
 					<img src="{{ user_details.image.url }}" class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
+					{% else %}
+					<img class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
 					{% endif %}
 				</p>
 				<p class="textFont"><img src="https://img.icons8.com/dotty/80/000000/working-with-a-laptop.png" style="height:23px;width:23px;"><span class="tab" style="margin-top: 9px;">{{ position }}</span></p>
-				<p class="textFont">{{ user_details.department }}</p>
-				<p class="textFont"><img src="https://img.icons8.com/wired/64/000000/home.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.city}}, {{ user_details.country}}</span></p>
-
+				<p class="textFont"><img src="https://img.icons8.com/ios/100/000000/marker-filled.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.city}}, {{ user_details.country}}</span></p>
+				<p class="textFont" style="font-size: 15px;"><img src="https://img.icons8.com/dotty/80/000000/department.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.department }}</span></p>
+				<p class="textFont" style="font-size: 15px;"><img src="https://img.icons8.com/ios/50/000000/university.png" style="height:23px;width:23px;"><span class="tab">Noakhali Science and Technology University</span>
+				<hr></hr>
 				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</a>
 			</div>
 		</div>
@@ -125,7 +128,7 @@
 					{% csrf_token %}
 					{% for c in courses %}
 					<div style="padding: 5px; text-align: center;">
-						<button class="btn btn-outline-info" type="submit" name="c" value="{{c}}">{{c}}</button>
+						<button type="submit" name="c" value="{{c}}" style="background-color: transparent; background-repeat: no-repeat; border:none;"><img src="https://img.icons8.com/android/24/000000/play.png" style="height: 8px; "><span class="tab" style="font-size: 20px;">{{c}}</span></button>
 					</div>
 					{% endfor %}
 					<br>

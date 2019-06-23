@@ -13,8 +13,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 	# username = serializers.CharField(source= user.username)	
 	class Meta:
 		model = User
-		fields = ('username', 'email', 'password')
-		extra_kwargs = {'password': {'read_only': True}}
+		fields = ('username', 'email')
 
 	def create(self, validated_data):
 		""" Create and return a new user. """

@@ -33,7 +33,7 @@
 			</div>
 			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
 				
-				{% for course, teacher, percentage,int_percentage  in course_percentages %}
+				{% for course, teacher, percentage,int_percentage,marks  in course_percentages %}
 				<span style="font-size: 1.5rem;font-weight: bold;">{{course}}</span><span> {{teacher}}</span>	
 				<div class="progress" style="width: 100%; height: 30px;">
 					<div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="{{course_percentage.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{int_percentage}}%">
@@ -42,6 +42,10 @@
 						</span>
 					</div>
 				</div>
+				<hr></hr>
+				<p style="font-size: 19px; font-weight: bold;">
+					Marks: <span> {{marks}} </span>
+				</p>
 				<br>
 				{% endfor %}
 			</div>

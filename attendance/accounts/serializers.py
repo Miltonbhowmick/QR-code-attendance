@@ -1,11 +1,36 @@
 from rest_framework import serializers
 from .models import UserProfile, StudentProfile, PresentSheet
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 class HelloSerializer(serializers.Serializer):
 	""" Serializers a name field for testing out APIView """
 
 	name = serializers.CharField(max_length= 10)
+
+class LoginSerializer(serializers.Serializer):
+	email = serializers.CharField()
+	password = serializers.CharField()
+
+	def validate(self,data):
+		email = data.get("email", "")
+		password = data.get("password","")
+
+		if email and password:
+			user = authenticate(username=email,password=password)
+			if user:
+				if user.is_active:
+					data["user"] = user
+				else:
+					msg = "User is deactivated."
+					raise serializers.ValidationError("User is deactivated.")
+			else:
+				msg = "Unable to login with given credentials."
+				raise serializers.ValidationError("User is deactivated.")
+		else:
+			msg = "Must provide email and password both."
+			raise serializers.ValidationError("User is deactivated.")
+		return data
 
 class UserProfileSerializer(serializers.ModelSerializer):
 	""" A serializer for our user profile objects. """

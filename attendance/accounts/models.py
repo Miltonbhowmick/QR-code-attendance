@@ -42,7 +42,7 @@ class UserProfile(models.Model):
 	department = models.CharField(max_length = 50, blank=True)
 
 	def __str__(self):
-		name=self.user.username
+		name=self.user.username 
 		return name
 
 
@@ -65,7 +65,7 @@ class PresentSheet(models.Model):
 	# join_date = "("+str(datetime.datetime.now().date()) +") ("+ d 
 	""""""	
 	def __str__(self):
-		class_name = str(self.select_course_code) +" ("+ str(self.select_session) +") ("+str(self.join_date)+")"	
+		class_name = str(self.select_course_code) +" ("+ str(self.select_session) +") ("+(((str(self.join_date)).split(".")))[0]+")"	
 		return class_name
 
 	def get_absolute_url(self):

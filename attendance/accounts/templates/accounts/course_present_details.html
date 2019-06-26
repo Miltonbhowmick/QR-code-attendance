@@ -17,28 +17,25 @@
 	</div>
 	<hr></hr>
 	<div class="row">
-
-		<div class="col-md-3"  style="max-width: 13%;">
+		<div class="col-md-3"  style="max-width: 20%;">
 			<table class="table table-bordered">
-			  <thead>
-			    <tr>
-			      <th>Name Of students</th>
+			  <thead style="height: 74px;">
+			    <tr >
+			      <th >Name Of students</th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			  	<form method="POST">
-			    {% for s in session_students %}
+			    {% for username, name in students_name %}
 			      <tr>
 				      {% csrf_token %}
-				      <td><button type="submit" name="s" value="{{s}}" style="background: none;color: blue;border: none;">{{s}}</button></td>
+				      <td><button type="submit" name="s" value="{{username}}" style="background: none;color: blue;border: none;">{{name}}</button></td>
 			      </tr>
 			    {% endfor %}
 			    </form>
 			  </tbody>
 			</table>
 		</div>
-
-
 		{% for date, students in attend_students %}
 		<div class="col-md-3" style="max-width: 10%;">
 			<table class="table table-bordered" style="text-align: center;">

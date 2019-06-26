@@ -18,7 +18,7 @@ router = DefaultRouter()
 router.register('hello-viewset', views.HelloViewSet, base_name='hello_viewset')
 router.register('profile', views.UserProfileViewSet)
 router.register('student-profile', views.StudentProfileViewSet)
-router.register('login', views.LoginViewSet, base_name='login')
+# router.register('login', views.LoginViewSet, base_name='login')
 router.register('course-presentsheet',views.CoursePresentSheetViewSet, base_name='course-presentsheet')
 # router.register('link', views.AttendanceSheetView.as_view())
 
@@ -50,6 +50,8 @@ urlpatterns = [
  
     #API urls
     path('hello-view/', views.HelloApiView.as_view()),
+    path('api-login/', views.LoginViewSet.as_view()),
+    path('api-logout/', views.LogoutView.as_view()),
     re_path('qrcodeattendance/profile/session/(?P<session>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code_api/(?P<random_url>[a-zA-Z0-9-_]+)', views.AttendanceSheetView.as_view()),
     path('api/',include(router.urls))    
 ]   

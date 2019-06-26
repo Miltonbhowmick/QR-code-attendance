@@ -25,7 +25,15 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
 from rest_framework.authtoken.serializers import AuthTokenSerializer #for login APIView
 from rest_framework.authtoken.views import ObtainAuthToken #for login APIView
-
+from rest_framework.status import(
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK
+)
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
 
 # Import API classes, methods (LOCAL)
 from . import serializers
@@ -456,7 +464,7 @@ def view_session(request, slug):
     session = get_object_or_404(ClassSession, slug=slug)
     course_code = CourseCode.objects.filter(Q(session=session)&Q(Q(teacher1=request.user)|Q(teacher2=request.user)))
     selected_course_code = request.POST.get("course_code")
-    course_student = StudentProfile.objects.filter(Q(student_session= session))
+    course_student = StudentProfile.objects.filter(Q(student_session= session)).order_by('student_roll')
 
     """ All class lecture performances """
     user = request.user
@@ -527,7 +535,7 @@ def present_sheet(request,random_url):
         delete = request.POST.get('delete')
         return redirect('accounts:delete_course_attendance_sheet',course_code=present_sheet.select_course_code, random_url=present_sheet.random_url)
 
-    link = "http://192.168.0.111:8000/qrcodeattendance/profile/session/" +present_sheet.select_session+"/"+ present_sheet.select_course_code +"/qr_code_api"+"/"+ random_url
+    link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" +present_sheet.select_session+"/"+ present_sheet.select_course_code +"/qr_code_api"+"/"+ random_url
     context = {
         'link':link,
         'session_students':session_students,
@@ -605,6 +613,13 @@ def course_present_sheet(request, course_code):
     session = course.session
     students = StudentProfile.objects.all().order_by('student_roll')
 
+    students_name = list()
+    for s in students:
+        if s.student_session == str(session):
+            name = s.student_user.first_name + " " + s.student_user.last_name
+            students_name.append([s.student_user.username,name])
+
+
     session_students = list()
     for s in students:
         if s.student_session == str(session):
@@ -663,8 +678,7 @@ def course_present_sheet(request, course_code):
 
     """ Paging the sheets """
     page = request.GET.get('page',1)
-    paginator = Paginator(attend_students, 8)
-
+    paginator = Paginator(attend_students, 7)
     try:
         attend_students = paginator.page(page)
     except PageNotAnInteger:
@@ -673,6 +687,7 @@ def course_present_sheet(request, course_code):
         attend_students = paginator.page(paginator.num_pages)
 
     context = {
+        'students_name':students_name,
         'session_students':session_students, 
         'attend_students':attend_students, 
         'course_code':course.course_code, 
@@ -716,7 +731,7 @@ def view_qr_code(request, slug, course_code, random_url):
     Example: http://127.0.0.1:8000/profile/session/2015-16/ICE-1101/qr_code/5380c2eba11158223369c68a/
     slug, course_code, random_url are string
     """
-    link = "http://192.168.0.111:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code_api"+"/"+ random_url
+    link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code_api"+"/"+ random_url
     refresh_link = "http://127.0.0.1:8000/qrcodeattendance/profile/session/" + slug +"/"+ course_code +"/qr_code"+"/"+ random_url
     print(link)
     context = {
@@ -857,16 +872,52 @@ class StudentProfileViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('student_session','student_user__username','student_user__email',)
 
-class LoginViewSet(viewsets.ViewSet):
-    """ Checks email and password and returns an auth token """
-    serializer_class = AuthTokenSerializer
+class LoginViewSet(APIView):
+    serializer_class = serializers.LoginSerializer
 
-    def create(self, request):
-        """ Use the obtainAuthToken APIView to validate and create a token """
-        return ObtainAuthToken().post(request)
+    def post(self, request):
+        serializer = serializers.LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
+        login(request,user)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response(
+            {
+                "token":token.key            
+            },
+            status=200
+        )
+
+class LogoutView(APIView):
+    """
+    Calls Django logout method and delete the Token object
+    assigned to the current User object.
+    Accepts/Returns nothing.
+    """
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        return self.logout(request)
+
+    def logout(self, request):
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+
+        response = Response({"detail": _("Successfully logged out.")},
+                            status=status.HTTP_200_OK)
+        return response
+
+# class LoginViewSet(viewsets.ViewSet):
+#     """ Checks email and password and returns an auth token """
+#     serializer_class = AuthTokenSerializer
+
+#     def create(self, request):
+#         """ Use the obtainAuthToken APIView to validate and create a token """
+#         return ObtainAuthToken().post(request)
 
 class AttendanceSheetView(APIView):
-
     def get(self, request, session, course_code, random_url):
         user = request.user  # student user request
         # presentsheet, created = PresentSheet.objects.get_or_create(attend_user=user)

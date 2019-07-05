@@ -58,12 +58,6 @@ class PresentSheet(models.Model):
 	select_course_code = models.CharField(max_length= 50, blank=True)
 	select_session = models.CharField(max_length=50, blank= True)
 	random_url = models.CharField(max_length=200, blank= True)
-	""" Another method """
-	# d = str(datetime.datetime.now().time())
-	# d = d.replace(":","-")
-	# d = d.replace(".","-")
-	# join_date = "("+str(datetime.datetime.now().date()) +") ("+ d 
-	""""""	
 	def __str__(self):
 		class_name = str(self.select_course_code) +" ("+ str(self.select_session) +") ("+(((str(self.join_date)).split(".")))[0]+")"	
 		return class_name

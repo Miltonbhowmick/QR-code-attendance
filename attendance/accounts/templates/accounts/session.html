@@ -24,7 +24,7 @@
 					{% csrf_token %}
 					{% for c in course_code %}		
 					<span style="padding: 2px; padding-top:2px;">
-						<button class="btn btn-outline-info" type="submit" name="c" value="{{ c }}">{{ c }}</button>
+						<button class="btn btn-outline-info" type="submit" name="c" value="{{c}}">{{ c }}</button>
 					</span>
 					{% endfor %}
 				</form>	

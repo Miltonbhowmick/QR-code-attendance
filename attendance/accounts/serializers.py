@@ -25,11 +25,9 @@ class LoginSerializer(serializers.Serializer):
 					msg = "User is deactivated."
 					raise serializers.ValidationError("User is deactivated.")
 			else:
-				msg = "Unable to login with given credentials."
-				raise serializers.ValidationError("User is deactivated.")
-		else:
-			msg = "Must provide email and password both."
-			raise serializers.ValidationError("User is deactivated.")
+				raise serializers.ValidationError("Unable to login with given credentials.")
+		else: 
+			raise serializers.ValidationError("Must provide email and password both.")
 		return data
 
 class UserProfileSerializer(serializers.ModelSerializer):

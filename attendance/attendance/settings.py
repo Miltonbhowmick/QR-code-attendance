@@ -139,6 +139,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = '/profile/'
 
+LOGOUT_REDIRECT_URL = '/qrcodeattendance/'
+
 """
 LOGIN_URL = '/login/'
 

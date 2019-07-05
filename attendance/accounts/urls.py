@@ -4,6 +4,7 @@ from . import views
 from .models import PresentSheet
 from rest_framework.routers import DefaultRouter
 from django.urls import reverse_lazy
+from django.conf import settings
 
 # attendance_api_link object  !!! Will be bugged!!!
 obj = PresentSheet.objects.all()
@@ -18,18 +19,16 @@ router = DefaultRouter()
 router.register('hello-viewset', views.HelloViewSet, base_name='hello_viewset')
 router.register('profile', views.UserProfileViewSet)
 router.register('student-profile', views.StudentProfileViewSet)
-# router.register('login', views.LoginViewSet, base_name='login')
 router.register('course-presentsheet',views.CoursePresentSheetViewSet, base_name='course-presentsheet')
-# router.register('link', views.AttendanceSheetView.as_view())
+# router.register('course-percentage',views.CoursePercentageViewSet, base_name='course-percentage')
 
 app_name = "accounts"
     
 urlpatterns = [
-    path('test/', views.main, name='main'),
-    # path('duplicate/',views.duplicate, name='duplicate'),
+    path('',views.first, name='first'),
     path('qrcodeattendance/', views.qrcodeattendance, name='qrcodeattendance'),
     path('qrcodeattendance/login/', views.login_views, name='login'),
-    path('', auth_views.LogoutView.as_view(next_page='qrcodeattendance/'), name='logout'),
+    path('qrcodeattendance/logout/', views.logout_views, name='logout'),
     path('qrcodeattendance/signup/', views.register, name='signup'), # for teacher
     path('qrcodeattendance/student_signup/', views.student_signup, name='student_signup'),
     path('qrcodeattendance/admin_profile/',views.view_admin_profile, name='view_admin_profile'),
@@ -48,10 +47,10 @@ urlpatterns = [
     re_path('^qrcodeattendance/profile/session/(?P<slug>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code/(?P<random_url>[a-zA-Z0-9-_]+)/$', views.view_qr_code, name='view_qr_code'),
     re_path('^qrcodeattendance/profile/(?P<course_code>[a-zA-Z0-9-_]+)/presentsheet/',views.course_present_sheet, name='course_present_sheet'),
  
-    #API urls
-    path('hello-view/', views.HelloApiView.as_view()),
+    #API urlsx
+    re_path('qrcodeattendance/profile/session/(?P<session>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code_api/(?P<random_url>[a-zA-Z0-9-_]+)', views.AttendanceSheetView.as_view()),
+    path('api-course-percentage/', views.CoursePercentage.as_view()),
     path('api-login/', views.LoginViewSet.as_view()),
     path('api-logout/', views.LogoutView.as_view()),
-    re_path('qrcodeattendance/profile/session/(?P<session>[a-zA-Z0-9-_]+)/(?P<course_code>[a-zA-Z0-9-_]+)/qr_code_api/(?P<random_url>[a-zA-Z0-9-_]+)', views.AttendanceSheetView.as_view()),
-    path('api/',include(router.urls))    
+    path('api/',include(router.urls)),
 ]   

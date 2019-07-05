@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<meta http-equiv="refresh" content="3; URL={{refresh_link}}">
+<!--<meta http-equiv="refresh" content="3; URL={{refresh_link}}">-->
 <title>{{course_code}}- QR code</title>
 {% endblock %}
 
 {% block main-content %}
-	<div class="row">
+	<div class="row" id="here">
 		<div class="col-md-6">
 			<div class="big-success">
 					Today's Attendance Information
@@ -70,3 +70,15 @@
 </div>
 </div>
 {% endblock %}
+
+<script type="text/javascript">
+	function updateDiv()
+{ 
+    $( "#here" ).load(window.location.href + " #here" );
+}
+</script>
+
+
+<script type="text/javascript">
+	
+</script>

@@ -7,14 +7,15 @@ from .models import ClassSession, CourseCode, UserProfile, StudentProfile, Prese
 from django.contrib.auth.forms import UserChangeForm, AuthenticationForm, PasswordChangeForm
 
 from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 import os
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib import auth
-
+from django.conf import settings
+from django.contrib.auth.views import logout
 
 # Import API classes, methods (THIRD PARTY)
 from rest_framework.views import APIView
@@ -41,33 +42,45 @@ from . import permissions
 
 # Create your views here.
 
-def main(request): # For testing
-    return render(request, 'base_qr.html')
+# def main(request): # For testing
+
+#     return render(request, 'base_qr.html')
 # def duplicate(request):
 #     return render(request, 'accounts/duplicate.html')
+
+def first(request):
+    if request.user.is_authenticated:
+        return redirect('accounts:profile')
+    else:
+        return redirect('accounts:qrcodeattendance')
 
 def qrcodeattendance(request):    
     if request.user.is_authenticated:
         return redirect('accounts:profile')
-
-    return render(request, 'accounts/qrcodeattendance.html')
+    else:
+        return render(request, 'accounts/qrcodeattendance.html')
 
 # @login_not_required
 def login_views(request): 
     if request.user.is_authenticated:
         return redirect('accounts:profile')
-
-    if request.method == 'POST':
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            user = form.login(request)
-            if user:
-                login(request,user)
-            return redirect('accounts:profile')
     else:
-        form = LoginForm()
-    return render(request,'accounts/login_form.html',{'form':form})
+        if request.method == 'POST':
+            form = LoginForm(data=request.POST)
+            if form.is_valid():
+                user = form.login(request)
+                if user:
+                    login(request,user)
+                return redirect('accounts:profile')
+        else:
+            form = LoginForm()
+        return render(request,'accounts/login_form.html',{'form':form})
 # i am not using login_required() because of using Middleware.py which does the same work as login_required()
+
+def logout_views(request):
+    logout(request)
+
+    return redirect('accounts:qrcodeattendance')
 
 def register(request):  
     if request.user.is_authenticated:
@@ -205,6 +218,9 @@ def view_profile(request):
     return render(request, 'accounts/profile.html', context)
 
 def view_admin_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('accounts:qrcodeattendance')
+
     user_details = User.objects.get(username=request.user)
     course_codes = None
     sessions = ClassSession.objects.all();
@@ -330,6 +346,9 @@ def view_student_profile(request):
     return render(request, 'accounts/student_profile.html',context)
 
 def view_teacher_student_profile(request,student):
+    if not request.user.is_authenticated:
+        return redirect('accounts:qrcodeattendance')
+
     s = User.objects.get(username=str(student))
     user_details = UserProfile.objects.get(user=s)
     student = StudentProfile.objects.get(student_user=s)
@@ -746,6 +765,8 @@ def view_qr_code(request, slug, course_code, random_url):
     return render(request, 'accounts/qr_code_form.html', context )
 
 def course_percentage(request, course_code, session, student):
+    if not request.user.is_authenticated:
+        return redirect('accounts:qrcodeattendance')
 
     user = User.objects.get(username=student)
     course_percentage = CoursePercentage.objects.get(student_user=user,course_code__course_code=course_code,session__session=session)
@@ -877,16 +898,27 @@ class LoginViewSet(APIView):
 
     def post(self, request):
         serializer = serializers.LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        login(request,user)
-        token, created = Token.objects.get_or_create(user=user)
-        return Response(
-            {
-                "token":token.key            
-            },
-            status=200
-        )
+           
+        if serializer.is_valid():
+            user = serializer.validated_data["user"]
+            login(request,user)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response(
+                {
+                    "isLogin":"True",
+                    "token":token.key
+
+                },
+                status=200
+            )
+        else:
+            return Response(
+                {
+                    "isLogin":"False"  # "token":token.key
+
+                },
+                status=200
+            )
 
 class LogoutView(APIView):
     """
@@ -909,29 +941,118 @@ class LogoutView(APIView):
                             status=status.HTTP_200_OK)
         return response
 
-# class LoginViewSet(viewsets.ViewSet):
-#     """ Checks email and password and returns an auth token """
-#     serializer_class = AuthTokenSerializer
 
-#     def create(self, request):
-#         """ Use the obtainAuthToken APIView to validate and create a token """
-#         return ObtainAuthToken().post(request)
+from django.views import View
+# from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
+from django.core import serializers as serializers_view
+
+"""class AttendanceSheetView(View):
+    def get(self, request, session, course_code, random_url):
+        user = request.user  # student user request
+        presentsheet = PresentSheet.objects.get(random_url = random_url)
+        presentsheet.save()
+        presentsheet.attend_user.add(user)
+        #return redirect('accounts:profile')
+        return JsonResponse({
+            'status': 'ok'
+            })"""
 
 class AttendanceSheetView(APIView):
     def get(self, request, session, course_code, random_url):
         user = request.user  # student user request
-        # presentsheet, created = PresentSheet.objects.get_or_create(attend_user=user)
         presentsheet = PresentSheet.objects.get(random_url = random_url)
         presentsheet.save()
         presentsheet.attend_user.add(user)
+        
+        return Response({
+            'status': 'ok'
+            })
 
-        return redirect('accounts:profile')    
+
 
 class CoursePresentSheetViewSet(viewsets.ModelViewSet):
     queryset = PresentSheet.objects.all()
     serializer_class = serializers.CoursePresentSheetSerializer
 
+class CoursePercentage(View):
+    def get(self, request):
+        user = request.user
+        # user_details = UserProfile.objects.get(user= user)
+        # student = StudentProfile.objects.get(student_user=user)
+        # session = ClassSession.objects.get(session=student.student_session)
+        # course_codes = CourseCode.objects.filter(session=session)
 
+        # students = StudentProfile.objects.all().order_by('student_roll')
+        # session_students = list()
+        # for s in students:
+        #     if s.student_session == str(session):
+        #         session_students.append(s.student_user.username)
 
+        # course_percentages = list()    
+        # for course in course_codes:
+        #     check = list()
+        #     t1 = course.teacher1
+        #     t2 = course.teacher2
+
+        #     if t1:
+        #         t1_obj = TeacherProfile.objects.get(teacher_user=t1)
+        #         t1_sheets = t1_obj.class_presentsheet.filter(select_course_code=course).all().count()
+        #         course_present_sheets = t1_obj.class_presentsheet.filter(select_course_code=course)
+                
+        #         attend_students = list()
+        #         for sheet in course_present_sheets:
+        #             check = list() 
+        #             student_users = sheet.attend_user.all()
+        #             for std in student_users:
+        #                 if std.username in session_students:
+        #                     check.append(std.username)
+        #             attend_students.append(check)
+               
+        #         student_name = str(student)
+        #         int_percentage=0
+        #         percentage = 0.00
+        #         if t1_sheets != 0: 
+        #             number_of_attend = 0
+        #             for num in attend_students:
+        #                 if student_name in num:
+        #                     number_of_attend +=1
+        #             percentage = (number_of_attend/t1_sheets)*100
+        #             percentage = round(percentage,2)
+        #             int_percentage = int(percentage)
+        #         course_percentages.append((course,t1,percentage,int_percentage))
+
+        #     if t2:
+        #         t2_obj = TeacherProfile.objects.get(teacher_user=t2)
+        #         t2_sheets = t2_obj.class_presentsheet.filter(select_course_code=course).all().count()
+        #         course_present_sheets = t2_obj.class_presentsheet.filter(select_course_code=course)
+                
+        #         attend_students = list()
+        #         for sheet in course_present_sheets:
+        #             check = list() 
+        #             student_users = sheet.attend_user.all()
+        #             for std in student_users:
+        #                 if std.username in session_students:
+        #                     check.append(std.username)
+        #             attend_students.append(check)
+               
+        #         student_name = str(student)
+        #         percentage = 0.00
+        #         int_percentage=0
+        #         if t2_sheets != 0: 
+        #             number_of_attend = 0
+        #             for num in attend_students:
+        #                 if student_name in num:
+        #                     number_of_attend +=1
+        #             percentage = (number_of_attend/t2_sheets)*100
+        #             percentage = round(percentage,2)
+
+        #         int_percentage = int(percentage)
+        #         course_percentages.append((course,t2,percentage,int_percentage ))
+
+        # serialized_obj = serializers_view.serialize('json', [course_percentages, ])
+        return JsonResponse( {
+                    "user": "user"
+                },)
 
 

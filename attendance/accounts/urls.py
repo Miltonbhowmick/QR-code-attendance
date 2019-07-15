@@ -15,7 +15,7 @@ if obj.exists():
     random_url =a.random_url
 
 # API codes
-router = DefaultRouter()
+router = DefaultRouter()     
 router.register('hello-viewset', views.HelloViewSet, base_name='hello_viewset')
 router.register('profile', views.UserProfileViewSet)
 router.register('student-profile', views.StudentProfileViewSet)

@@ -581,49 +581,6 @@ def delete_course_attendance_sheet(request,course_code, random_url):
     }
     return render(request,'accounts/delete_course_attendance_sheet.html',context)
 
-# def course_present_sheet(request, course_code):
-#     if not request.user.is_authenticated:
-#         return redirect('accounts:qrcodeattendance')
-
-#     course =  CourseCode.objects.get(course_code= course_code)
-#     session = course.session
-#     students = StudentProfile.objects.all().order_by('student_roll')
-
-#     session_students = list()
-#     for s in students:
-#         if s.student_session == str(session):
-#             session_students.append(s.student_user.username)
-
-#     teacher = TeacherProfile.objects.get(teacher_user= request.user)
-#     all_present_sheets = teacher.class_presentsheet.all()
-#     course_present_sheets = list()
-#     for sheet in all_present_sheets:
-#         if sheet.select_course_code == str(course_code):
-#             course_present_sheets.append(sheet)
-
-#     attend_students = list()
-#     for sheet in course_present_sheets:
-#         check = list()
-#         date , rm =str(sheet.join_date).split('.') #date of each class 
-#         student_users = sheet.attend_user.all()
-#         for student in student_users :
-#             if student.username in session_students:
-#                 check.append(student.username)
-#         attend_students.append([date,check])
-
-#     # print(attend_students)    
-#     # sheet_info = zip(session_students, course_present_sheets)
-    
-#     context ={
-#         # 'sheet_info': sheet_info,
-#         'attend_students': attend_students,
-#         'session_students':session_students,
-#         'course_present_sheets':course_present_sheets,
-#     }   
-
-#     return render(request, 'accounts/course_present_sheet.html', context)
-
-
 def course_present_sheet(request, course_code):
     if not request.user.is_authenticated:
         return redirect('accounts:qrcodeattendance')
@@ -978,79 +935,6 @@ class CoursePresentSheetViewSet(viewsets.ModelViewSet):
 class CoursePercentage(View):
     def get(self, request):
         user = request.user
-        # user_details = UserProfile.objects.get(user= user)
-        # student = StudentProfile.objects.get(student_user=user)
-        # session = ClassSession.objects.get(session=student.student_session)
-        # course_codes = CourseCode.objects.filter(session=session)
-
-        # students = StudentProfile.objects.all().order_by('student_roll')
-        # session_students = list()
-        # for s in students:
-        #     if s.student_session == str(session):
-        #         session_students.append(s.student_user.username)
-
-        # course_percentages = list()    
-        # for course in course_codes:
-        #     check = list()
-        #     t1 = course.teacher1
-        #     t2 = course.teacher2
-
-        #     if t1:
-        #         t1_obj = TeacherProfile.objects.get(teacher_user=t1)
-        #         t1_sheets = t1_obj.class_presentsheet.filter(select_course_code=course).all().count()
-        #         course_present_sheets = t1_obj.class_presentsheet.filter(select_course_code=course)
-                
-        #         attend_students = list()
-        #         for sheet in course_present_sheets:
-        #             check = list() 
-        #             student_users = sheet.attend_user.all()
-        #             for std in student_users:
-        #                 if std.username in session_students:
-        #                     check.append(std.username)
-        #             attend_students.append(check)
-               
-        #         student_name = str(student)
-        #         int_percentage=0
-        #         percentage = 0.00
-        #         if t1_sheets != 0: 
-        #             number_of_attend = 0
-        #             for num in attend_students:
-        #                 if student_name in num:
-        #                     number_of_attend +=1
-        #             percentage = (number_of_attend/t1_sheets)*100
-        #             percentage = round(percentage,2)
-        #             int_percentage = int(percentage)
-        #         course_percentages.append((course,t1,percentage,int_percentage))
-
-        #     if t2:
-        #         t2_obj = TeacherProfile.objects.get(teacher_user=t2)
-        #         t2_sheets = t2_obj.class_presentsheet.filter(select_course_code=course).all().count()
-        #         course_present_sheets = t2_obj.class_presentsheet.filter(select_course_code=course)
-                
-        #         attend_students = list()
-        #         for sheet in course_present_sheets:
-        #             check = list() 
-        #             student_users = sheet.attend_user.all()
-        #             for std in student_users:
-        #                 if std.username in session_students:
-        #                     check.append(std.username)
-        #             attend_students.append(check)
-               
-        #         student_name = str(student)
-        #         percentage = 0.00
-        #         int_percentage=0
-        #         if t2_sheets != 0: 
-        #             number_of_attend = 0
-        #             for num in attend_students:
-        #                 if student_name in num:
-        #                     number_of_attend +=1
-        #             percentage = (number_of_attend/t2_sheets)*100
-        #             percentage = round(percentage,2)
-
-        #         int_percentage = int(percentage)
-        #         course_percentages.append((course,t2,percentage,int_percentage ))
-
-        # serialized_obj = serializers_view.serialize('json', [course_percentages, ])
         return JsonResponse( {
                     "user": "user"
                 },)

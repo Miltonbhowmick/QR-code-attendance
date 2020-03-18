@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<meta http-equiv="refresh" content="3; URL={{refresh_link}}">
+<title>{{course_code}}- QR code</title>
+{% endblock %}
+
+{% block main-content %}
+	<div class="row">
+		<div class="col-md-6">
+			<div class="big-success">
+					Today's Attendance Information
+				</div>
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				<p><i><span style="font-weight: bold;">Course Code</span>: {{course_code}}</i></p>
+				<p><i><span style="font-weight: bold;">Session</span>: {{session}}</i></p>
+				<p><i><span style="font-weight: bold;">Teacher</span>: {{user.first_name}} {{user.last_name}}</i></p>
+			</div>
+			<!--- Listing present students --->
+			<div class="label-success">
+					Live Taking Attendance
+			</div>
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				
+				<div class="spinner-grow text-success" role="status">
+				  <span class="sr-only">Loading...</span>
+				</div>
+
+				{% for s in session_students %}	
+					<hr></hr>
+					<p style="text-align:left; margin-left: 50px;">
+						<span class="label-success" style="background-color: #08C74E;"> {{s}} </span>
+					</p>
+				{% endfor %}
+			</div>
+
+
+			<!--- End listing present students --->
+		</div>
+<!-- QR code generating by Javascript	 -->
+	<div class="col-md-6">
+		<div class="big-success"> QR Code</div>
+		<div class="shadow-sm p-3 mb-3 bg-white rounded">
+			{% load static %}
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+			<!--<script type="text/javascript" src="../jquery.qrcode.min.js"></script>
+			--><script type="text/javascript" src="{%static 'accounts/jquery-qrcode-master/src/jquery.qrcode.js' %}"></script>
+			<script type="text/javascript" src="{% static 'accounts/jquery-qrcode-master/src/qrcode.js' %}"></script>
+				<hr></hr>
+				<div id="qrcodeTable"></div>
+				<div id="qrcodeCanvas"></div>
+				<hr></hr>	
+				<!-- <button class="btn btn-outline-info" type="button" id="generate"> generate </button> -->
+			<script>
+
+					$("#qrcodeTable").hide();
+					  //jQuery('#qrcode').qrcode("this plugin is great");
+					   jQuery('#qrcodeTable').qrcode({
+						render  : "table",
+						text  : "{{link}}"
+					  });
+					// $("#generate").click(function(){
+					  $("#qrcodeTable").toggle();			  
+					// });
+			</script>
+		</div>
+
+	</div>
+<div>
+</div>
+</div>
+{% endblock %}

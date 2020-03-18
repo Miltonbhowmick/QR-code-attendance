@@ -1,0 +1,32 @@
+{% extends 'base_qr.html' %}
+{% load crispy_forms_tags %}
+
+
+
+			{% block main-content %}	
+				<div class="row">
+					<div class="col-sm-4"></div>
+					<div class="col-sm-4">
+						
+						<form method="post" action="{% url 'accounts:login' %}">	
+							{% csrf_token %}
+							<div class="form-group">
+								{{form.label|safe }}
+							</div>
+							{{form|crispy}}
+							
+							<div class="form-group">
+								<button type="submit"  class="btn btn-outline-info">Submit</button>
+							</div>
+
+							<div class="form-group">
+								<a href="{% url 'password_reset' %}"  >Forget Password</a>
+							</div>
+
+							<div class="form-group">
+								<a href="{% url 'accounts:qrcodeattendance' %}"  >Go SignUp Page</a>
+							</div>
+						</form>
+					</div>
+				</div>
+      {% endblock %}

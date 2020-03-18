@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>{{course_code}}- all attendance</title>
+{% endblock %}
+
+{% block main-content %}
+
+	<div>
+		<span class="big-success titleFont">Course Code: {{course_code}}</span>
+		<span style="float: right;">
+			<form method="POST">
+				{% csrf_token %}
+				<button type="submit" name="delete" value="delete" class="btn btn-outline-info">Delete</button>
+			</form>
+		</span>
+	</div>
+	<hr></hr>
+	<div class="row">
+		<div class="col-md-3"  style="max-width: 20%;">
+			<table class="table table-bordered">
+			  <thead style="height: 74px;">
+			    <tr >
+			      <th >Name Of students</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	<form method="POST">
+			    {% for username, name in students_name %}
+			      <tr>
+				      {% csrf_token %}
+				      <td><button type="submit" name="s" value="{{username}}" style="background: none;color: blue;border: none;">{{name}}</button></td>
+			      </tr>
+			    {% endfor %}
+			    </form>
+			  </tbody>
+			</table>
+		</div>
+		{% for date, students in attend_students %}
+		<div class="col-md-3" style="max-width: 10%;">
+			<table class="table table-bordered" style="text-align: center;">
+			  <thead>
+			    <tr>
+			      <th>{{date}}</th>
+			    </tr>
+			  </thead>
+			 
+			  <tbody>
+			    {% for s in session_students %}
+			      <tr>
+			      	{% if s in students %}
+				        <td style="color: #08C74E; font-weight: bold;">P</td>
+				    {% elif s not in students %}
+				        <td style="color: red; font-weight: bold;">A</td>
+				    {% endif %}
+			      </tr>
+			    {% endfor %}
+			  </tbody>
+			</table>
+		</div>
+		{% endfor %}
+	</div>
+
+<div>	
+	{% if attend_students.has_other_pages %}
+		  <ul class="pagination page" style="padding: 3px;">
+		    {% if attend_students.has_previous %}
+		      <li><a href="?page={{ attend_students.previous_page_number }}">&laquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&laquo;</span></li>
+		    {% endif %}
+		    {% for i in attend_students.paginator.page_range %}
+		      {% if attend_students.number == i %}
+		        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		      {% else %}
+		        <li><a href="?page={{ i }}">{{ i }}</a></li>
+		      {% endif %}
+		    {% endfor %}
+		    {% if attend_students.has_next %}
+		      <li><a href="?page={{ attend_students.next_page_number }}">&raquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&raquo;</span></li>
+		    {% endif %}
+		  </ul>
+	{% endif %}
+</div>
+</div>
+
+{% endblock %}

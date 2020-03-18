@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	<title>{{user_details.user.username}} ({{user_details.user.first_name}} {{user_details.user.last_name}})</title>
+{% endblock %}
+
+{% block main-content %}
+
+<div class="row" style="box-sizing: inherit;">
+
+		<!-- left part -->
+		<div class="col-md-3" >
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="d-flex justify-content-center">
+					<h3>{{user_details.user.first_name}} {{user_details.user.last_name}}</h3>
+				</div>
+				<hr></hr>
+				<p class="d-flex justify-content-center"> <!-- center the image -->
+					{% load staticfiles %}
+
+					{% if user_details.image %}
+					<img src="{{ user_details.image.url }}" class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
+					{% endif %}
+				</p>
+				<p class="textFont"><img src="https://img.icons8.com/ios/50/000000/department.png"style="height:23px;width:23px;"><span class="tab">{{ user_details.department }}</span></p>
+				<p class="textFont"><img src="https://img.icons8.com/wired/64/000000/home.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.city}}, {{ user_details.country}}</span></p>
+				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</button></a>
+			</div>
+		</div>
+		<div class="col-md-9" >
+			<div class="big-success titleFont">
+				course performance
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				
+				{% for course, teacher, percentage,int_percentage  in course_percentages %}
+				<span style="font-size: 1.5rem;font-weight: bold;">{{course}}</span><span> {{teacher}}</span>	
+				<div class="progress" style="width: 100%; height: 30px;">
+					<div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="{{course_percentage.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{int_percentage}}%">
+						<span style="font-size: 16px; font-weight: bold; ">
+						{{percentage}}%
+						</span>
+					</div>
+				</div>
+				<br>
+				{% endfor %}
+			</div>
+		</div>
+</div>
+
+{% endblock %}

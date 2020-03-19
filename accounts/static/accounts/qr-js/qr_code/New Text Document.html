@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>aofasa</title>
+</head>
+<body>
+<div id="qrcode"></div>
+{% load static %}
+<script type="text/javascript" src="% static 'accounts/qr_code/qrcode.min.js' %}"></script>
+<script type="text/javascript">
+var qrcode = new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+console.log(qrcode);
+</script>
+</body>
+</html>

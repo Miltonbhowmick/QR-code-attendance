@@ -1,0 +1,99 @@
+<!-- This loads of all of files that you call below from your 'static' folder -->
+{% load staticfiles %}
+<!--The static folder consists of your bootstrap files (.css, .js, fonts, etc)-->
+<!--When you load the static folders is calls all those folders in the static files without having to code each one in individually-->
+
+<html>
+  <head>
+    <!--This is the meta information which is good for SEO-->
+    {% block head-meta %}
+  	<meta charset="utf-8">
+  	<!--Add keywords that describe your project between the quotation marks. This helps search engines find and index your content-->
+    <meta name="keywords" content="REPLACE WITH YOUR OWN KEYWORDS HERE, AND HERE, AND HERE">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
+accounts/
+<!--The Block CSS is an example of what could go in your base.html file. If you already have these added into your static files then
+there's no need to call them here because you already loaded the static files at the top of the document. If these files are already in
+your static files then delete the 'block head-css below'-->
+
+    {% block head-css %}
+    {% endblock %}
+
+  </head>
+
+
+<!-- This is the start of the navigation bar at the top of the page-->
+<header>
+    <div class="container clearfix">   
+
+<div class= "navbar-wrapper">
+    <div class="container">
+        <nav class = "navbar navbar-inverse navbar-fixed-top" id="navbar_whole">
+
+                <div class = "navbar-header">
+                    <button type= "button" class = "navbar-toggle collapsed" data-toggle = "collapse" data-target= "#navbar" aria-expanded="false" aria-controls = "navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!--Below is the top-left hand side of the screen where you usually see a company/project name and a logo-->
+                    <!--The next line sends the user back to the home page-->
+                    <a class="navbar-brand" href="#"> 
+                        <!--Insert the file name of your brand image below after the 'img'-->
+                         <img class="img-responsive" src="/static/bootstrap/img/INSERT IMAGE OF BRAND HERE"> 
+                    </a>
+                </div>
+                
+                <div id= "navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                      <!--Below is where you put the rest of the links to the pages you've created. Please reference your own models
+                       in Django.-->
+                        <li>
+                            <a href="#">Cities</a>
+                        </li>
+                        <li>
+                            <a href="#">Cafes</a>
+                        </li>
+                    </ul>
+                </div>
+        </nav>
+    </div>
+</div>
+</div>
+</header>
+
+<!-- This is where you'll put your page content. Leave it blank for now. -->
+<div class="container">
+{% block content %}Nothing Here{% endblock %}
+</div>
+
+
+<!-- This is where the footer begins -->
+<footer>
+<div class= "navbar navbar-inverse navbar-static-bottom" role="navigation">
+    <div class="navbar-text pull-left">
+    </div>
+    <div class= "navbar-text pull-right">
+<!-- Add in your social media / github links here -->
+        <a href="https://github.com/clarkdatalabs">
+            <i class="fa fa-github-square fa-2x"></i></a>
+    </div>
+    <!--Below is the copyright information for the site. You can fill in your own here.-->
+    <div class="navbar-text pull-left">
+    &copy; Digital Projects Studio, 2015
+    </div>
+</div>	
+</footer>
+<!--This is my javascript block. If you've included the javascript files you need in the 'static' folder then there's no need to 
+put this here and you can delete the block below.-->
+{% block head-javascript %}
+    <script src="{% static 'accounts/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'accounts/bootstrap/js/bootstrap.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
+
+</html>

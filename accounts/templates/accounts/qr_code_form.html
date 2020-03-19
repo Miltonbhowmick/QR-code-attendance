@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<!--<meta http-equiv="refresh" content="3; URL={{refresh_link}}"> -->
+<title>{{course_code}}- QR code</title>
+{% endblock %}
+
+{% block main-content %}
+	<div class="row" id="here">
+		<div class="col-md-6">
+			<div class="big-success">
+					Today's Attendance Information
+				</div>
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				<p><i><span style="font-weight: bold;">Course Code</span>: {{course_code}}</i></p>
+				<p><i><span style="font-weight: bold;">Session</span>: {{session}}</i></p>
+				<p><i><span style="font-weight: bold;">Teacher</span>: {{user.first_name}} {{user.last_name}}</i></p>
+			</div>
+			<!--- Listing present students --->
+			<div class="label-success">
+					Live Taking Attendance
+			</div>
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				
+				<div class="spinner-grow text-success" role="status">
+				  <span class="sr-only">Loading...</span>
+				</div>
+					<p style="text-align:left; margin-left: 50px;" id='student_p'>
+						<!-- <span class="label-success" id="student" style="background-color: #08C74E;"></span>
+				 -->	</p>
+
+			</div>
+
+
+			<!--- End listing present students --->
+		</div>
+<!-- QR code generating by Javascript	 -->
+	<div class="col-md-6">
+		<div class="big-success"> QR Code</div>
+		<div class="shadow-sm p-3 mb-3 bg-white rounded">
+
+			{% load static %}
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+			<script type="text/javascript" src="{% static 'accounts/qr_code/qrcode.min.js' %}"></script>
+
+			<script type="text/javascript" src="{% static 'accounts/jquery-qrcode-master/src/jquery.qrcode.js' %}"></script>
+				<hr></hr>
+<!-- 				<div id="qrcodeTable"></div>
+				<div id="qrcodeCanvas"></div>
+ -->
+ 				<div id="qrCodeShow"></div>
+				<hr></hr>	
+				<!-- <button class="btn btn-outline-info" type="button" id="generate"> generate </button> -->
+			<script type="text/javascript">
+					var namearray = [];
+
+					generateQR();
+					function generateQR(){
+						var qrcode = new QRCode(document.getElementById('qrCodeShow'), "{{link}}");
+						console.log(qrcode);
+					}
+
+					/*/// qr using jQuery
+					$("#qrcodeTable").hide();
+					  //jQuery('#qrcode').qrcode("this plugin is great");
+					   jQuery('#qrcodeTable').qrcode({
+						render  : "table",
+						text  : "{{link}}"
+					  });
+					// $("#generate").click(function(){
+					  $("#qrcodeTable").toggle();			  
+					// });
+*/
+
+					/* Updating student name who scans QR code */
+					setInterval(updateAttendName,3000);
+					function updateAttendName(){
+						var check=[];
+						var xhttp = new XMLHttpRequest();
+						url='/qrcodeattendance/profile/session/present_sheet_api/{{random_url}}';
+						xhttp.open("GET",url,true)
+						 xhttp.onreadystatechange = function() {
+						    if (this.readyState == 4 && this.status == 200) {
+						      var students = JSON.parse(this.responseText);
+						      var p;
+						      for(s of students){
+						      	thenames = s.first_name + " " + s.last_name
+						      	if(namearray.includes(thenames)){
+									console.log('same')
+						      	}
+						      	else{
+						      		student_p = document.querySelector('#student_p');
+							      	p = document.createElement('span');
+							      	brk = document.createElement('hr');
+							      	p.className="label-success";
+							      	p.style.cssText = 'background-color: #08C74E;';
+							      	text = document.createTextNode(s.first_name + " " + s.last_name);
+							      	p.appendChild(text);
+							      	student_p.appendChild(p);
+							      	student_p.appendChild(brk);
+							      	console.log(student_p);
+							      	namearray.push(thenames);
+						      	}
+						      }
+						    }
+						  };
+						xhttp.send();
+					}
+					/* End Updating student name who scans QR code */
+			
+			</script>
+		</div>
+
+	</div>
+<div>
+</div>
+</div>
+{% endblock %}
+	

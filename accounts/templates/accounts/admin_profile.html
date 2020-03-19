@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+{% endblock %}
+
+{% block main-content %}
+	<div class="row" style="box-sizing: inherit;">
+		<!-- left part -->
+		<div class="col-md-6" >
+			<div class="big-success titleFont">
+				course details				
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="textFont">
+					Course Code: <span style="font-weight: bold;">{{course_details.course_code}} <span>
+				</div>
+				<hr></hr>
+				<div class="textFont">
+					{% if course_details.teacher1 %}
+						Teacher 1: <span style="font-weight: bold;">{{course_details.teacher1.first_name}} {{course_details.teacher1.last_name}} <span>
+					{% else %}
+						Teacher 1: <span style="font-weight: bold;">(X)<span>
+					{% endif %}
+				</div>
+				<div class="textFont">
+					{% if course_details.teacher2 %}
+						Teacher 2: <span style="font-weight: bold;">{{course_details.teacher2.first_name}} {{course_details.teacher1.last_name}}<span>
+					{% else %}
+						Teacher 2: <span style="font-weight: bold;">(X)<span>
+					{% endif %}
+				</div>
+			</div>
+			<div class="big-success titleFont">
+				add new session and course code				
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="row">
+					<div class="col-md-6">
+						<span class="titleFont label-success" style="text-align: center; background-color: #08C74E;font-size: 14px;">add course code</span>
+						<form method="POST">
+							{% csrf_token %}
+							<div class="form-group">
+								{{course_form.label| safe}}								
+							</div>
+							{{course_form|crispy}}
+							<div class="form-group">
+		                        <input type="submit" name="cc" value="submit" class="btn btn-outline-info" tabindex="7">
+		                    </div>
+						</form>
+					</div>
+					<div class="col-md-2">
+						<!--- Break  --->
+					</div>
+					<div class="col-md-4">
+						<span class="titleFont label-success" style="text-align: center; background-color: #08C74E; font-size: 14px;">add session</span>
+
+						<form method="POST">
+							{% csrf_token %}
+							<div class="form-group">
+								{{session_form.label| safe}}
+							</div>
+							{{session_form|crispy}}
+							<div class="form-group">
+		                        <input type="submit" name="ss" value="submit" class="btn btn-outline-info" tabindex="7">
+		                    </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End left part -->
+		<!-- middle part -->
+		<div class="col-md-3">
+			<div class="big-success titleFont">
+				course codes			
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="titleFont admin-course" style="text-align: left;">
+					{% for c in course_codes %}	
+					<p>
+						<form method="POST">
+							{% csrf_token %}
+							<button type="submit" name="c" value="{{c}}" style="background-color: transparent; background-repeat: no-repeat; border:none;"><img src="https://img.icons8.com/android/24/000000/play.png" style="height: 8px;"><span class="tab">{{c}}</span></button>
+						</form>
+						<hr></hr>
+					</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<!-- End middle part -->
+		<!-- right part -->
+		<div class="col-md-3" >
+			<div class="big-success titleFont">
+				sessions	
+			</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="titleFont admin-course" style="text-align: left;">
+					{% for s in sessions %}	
+					<p>
+						<form method="POST">
+							{% csrf_token %}
+							<button type="submit" name="s" value="{{s}}" style="background-color: transparent; background-repeat: no-repeat; border:none;"><img src="https://img.icons8.com/android/24/000000/play.png" style="height: 8px;"><span class="tab">{{s}}</span></button>
+						</form>
+						<hr></hr>
+					</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>	
+		<!-- End right part -->
+	</div>
+{% endblock %}

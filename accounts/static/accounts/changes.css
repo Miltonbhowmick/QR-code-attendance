@@ -1,0 +1,135 @@
+
+.reContainer{
+  margin-top:80px;
+  width: 100%;
+  padding-right: 14px;
+  padding-left: 14px; 
+  margin-right: auto;
+  margin-left: auto;
+}
+.body-tag{
+    color: #000 !important;
+    background-color: #fff !important;
+}
+.present-sheet-div{
+    margin-bottom: 10px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.h6, h6{
+	font-size: .8rem;
+}
+.titlebox{
+	height: 30px;
+	width: 60px;
+}
+.btn-outline-info{
+  color: #33b5e5;
+  border-color: #33b5e5;
+}
+.btn-outline-info:hover{
+  background-color: #33b5e5;
+}
+.label-success {
+  background-color:  #FC3648;
+  color: white;
+  padding: 8px;
+  font-size: 16px;
+  font-family: Arial;
+}
+.big-success{
+  background-color:    #FC3648;
+  color: white;
+  padding: 8px;
+  font-size: 16px;
+  font-family: Arial;
+  text-align: center;
+}
+.divPre {
+    display: block;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
+}
+.fonts{
+  font-size: 20px;
+}
+.titleFont{
+  font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.textFont{
+  color:#333;
+  font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+}
+.contentTitle{
+  font-family: Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif; 
+  line-height: 1.3;
+  color: #333;
+  font-size: 18px;
+}
+.tab{
+ margin-left: 10px;
+}
+.logo{
+  height: 35px;
+  width: 90px;
+  vertical-align: middle;
+}
+
+
+/* */
+.page li{
+  font-size: 30px;
+  padding: 3px;
+}
+
+/* Footer css */
+.pt{
+  padding-top: 40px;
+}
+
+.page-footer{
+  margin-top: 25%; 
+  background-color: #1f2021;
+
+}
+.container-fluid{
+  text-align: left !important;  
+  width: 90%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.text-white{
+  font-size: 14px;
+  color: #fff;
+}
+.list-style{
+  font-size: 14px;
+  color: #fff;
+  font-weight: norma
+}
+.footer-copyright{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding: 10px 4px 0;
+  background: #111;
+  color: #fff;
+}
+
+/* */
+.admin-course{
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}

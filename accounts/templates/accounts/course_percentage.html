@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}	
+
+	<title>Attendance percentage{{course_percentage.student_user.username}}</title>
+
+{% endblock %}
+
+{% block main-content %}
+		
+<div class="container reContainer">
+
+	<div class="row">
+		<div class="col-md-6">	
+			<div class="shadow-sm p-3 mb-3 bg-white rounded">
+				<div class="fonts" style="font-weight: bold;" >
+					{{course_percentage.student_user.first_name}} {{course_percentage.student_user.last_name}} 
+				</div>
+				<hr></hr>
+				<div class="fonts" >
+					<i>Course Code: {{course_percentage.course_code}}</i>
+				</div>
+				<div class="fonts">
+					<i>Session: {{course_percentage.session}}</i>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<span class="big-success">
+				Percentage
+			</span>
+
+			<br></br>
+
+			<div class="progress" style="width: 100%; height: 30px;">
+			  <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="{{course_percentage.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{int_course_percentage}}%">
+			  	<span style="font-size: 16px; font-weight: bold;">
+			  		{{course_percentage.percentage}}%
+			  	</span>
+			  </div>
+			</div>
+			<hr></hr>
+			<p style="font-size: 19px; font-weight: bold;">
+				Marks: <span> {{marks}} </span>
+			</p>
+		</div>
+	</div>
+</div>
+{% endblock %}

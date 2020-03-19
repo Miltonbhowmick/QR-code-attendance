@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block main-content %}
+
+	<form method="POST">
+		{% csrf_token %}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">
+				Are you sure to delete <strong>{{course_code}}</strong> present sheet?
+			</legend>
+			{{form|crispy}}	
+		</fieldset>
+		<div class="form-group">
+ 			<button class="btn btn-outline-danger" type="submit" name="c" value="yes">YES</button>
+ 			<button class="btn btn-outline-danger" type="submit" name="c" value="no">NO</button>
+		</div>
+	</form>
+
+{% endblock %}

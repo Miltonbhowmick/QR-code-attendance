@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block head %}
+	<title>{{user_details.user.username}} ({{user_details.user.first_name}} {{user_details.user.last_name}})</title>
+{% endblock %}
+
+{% block large %}
+<div class="reContainer">
+	<div class="row" style="box-sizing: inherit;">
+		<!-- left part -->
+		<div class="col-md-3">
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="border: 1px solid #efefef;">
+				<div class="d-flex justify-content-center">
+					<span class="titleFont" style="font-size: 16px;">
+						{{user_details.user.first_name}} {{user_details.user.last_name}}
+					</span>	
+				</div>
+				<hr></hr>
+				<p class="d-flex justify-content-center"> <!-- center the image -->
+					{% load staticfiles %}
+					{% if user_details.image %}
+					<img src="{{ user_details.image.url }}" class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
+					{% else %}
+					<img class="w3-circle" style="height:106px;width:106px" alt="Upload Photo">
+					{% endif %}
+				</p>
+				<p class="textFont"><img src="https://img.icons8.com/dotty/80/000000/working-with-a-laptop.png" style="height:23px;width:23px;"><span class="tab" style="margin-top: 9px;">{{ position }}</span></p>
+				<p class="textFont"><img src="https://img.icons8.com/ios/100/000000/marker-filled.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.city}}, {{ user_details.country}}</span></p>
+				<p class="textFont" style="font-size: 15px;"><img src="https://img.icons8.com/dotty/80/000000/department.png" style="height:23px;width:23px;"><span class="tab">{{ user_details.department }}</span></p>
+				<p class="textFont" style="font-size: 15px;"><img src="https://img.icons8.com/ios/50/000000/university.png" style="height:23px;width:23px;"><span class="tab">Noakhali Science and Technology University</span>
+				<hr></hr>
+				<a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-info">edit_profile</a>
+			</div>
+		</div>
+		<!-- End left part -->
+
+		<!-- middle part --> 
+		<div class="col-md-6"> 
+
+				<div class="big-success titleFont">
+					Get the QR code
+				</div>
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+
+				<span class="titleFont">
+					Select the session
+				</span>	
+
+				<hr></hr>
+				{% for session in repeat %}
+					<a href="{{ session.get_absolute_url }}" class="btn btn-outline-info">{{ session }}</a>
+				{% endfor %}		
+			</div>
+				<div class="big-success titleFont">
+					Class Attendace Performances 
+				</div>
+
+				{% for teacher,percentage, sheet in sheets %}
+			<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+					<div class="titleFont" style="font-weight: bold;">
+						{{sheet}}
+					</div>
+					<span class="contentTitle">
+						{{teacher.first_name}} {{teacher.last_name}}
+					</span>
+					<hr></hr>
+					<span class="contentTitle" style="font-size: 18px">
+						{{percentage}}%
+					</span>
+
+			</div>
+				{% endfor %}
+
+	<!--- pagination attendance performance -->
+	<div class="shadow-sm p-3 mb-5 bg-white rounded" style="margin-bottom: 1rem !important;border: 1px solid #efefef;">
+		{% if sheets.has_other_pages %}
+		  <ul class="pagination page" style="font-size: 100px;">
+		    {% if sheets.has_previous %}
+		      <li><a href="?page={{ sheets.previous_page_number }}">&laquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&laquo;</span></li>
+		    {% endif %}
+		    {% for i in sheets.paginator.page_range %}
+		      {% if sheets.number == i %}
+		        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+		      {% else %}
+		        <li><a href="?page={{ i }}">{{ i }}</a></li>
+		      {% endif %}
+		    {% endfor %}
+		    {% if sheets.has_next %}
+		      <li><a href="?page={{ sheets.next_page_number }}">&raquo;</a></li>
+		    {% else %}
+		      <li class="disabled"><span>&raquo;</span></li>
+		    {% endif %}
+		  </ul>
+	{% endif %}
+</div>
+<!--- End pagination attendance performance --->
+
+		</div>
+		<!-- End middle part -->
+
+		<!-- right part -->
+		<div class="col-md-3">
+			<!--- Each day attendance --->	
+			<div class="big-success titleFont">
+					Select class present sheets
+				</div>
+			<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded"style="border: 1px solid #efefef;">
+				
+				<hr></hr>
+				{% for sheet in present_sheet %}
+					<div class="present-sheet-div">
+						<a href="{{ sheet.get_absolute_url }}" class="btn btn-outline-info">{{ sheet }}</a>
+					</div>
+				{% endfor %}
+			</div>
+			<!--- End each day attendance --->	
+
+			<!--- Each course attendance --->
+			<div class="big-success titleFont">					
+					Course Present Sheet
+				</div>
+
+				<div class="pre-scrollable shadow-sm p-3 mb-5 bg-white rounded"style="border: 1px solid #efefef;">
+				<hr></hr>
+				<form method="POST">
+					{% csrf_token %}
+					{% for c in courses %}
+					<div style="padding: 5px; text-align: center;">
+						<button type="submit" name="c" value="{{c}}" style="background-color: transparent; background-repeat: no-repeat; border:none;"><img src="https://img.icons8.com/android/24/000000/play.png" style="height: 8px; "><span class="tab" style="font-size: 20px;">{{c}}</span></button>
+					</div>
+					{% endfor %}
+					<br>
+				</form>	
+			</div>
+
+			<!--- End each course attendance --->	
+		</div>
+		<!-- End right part -->
+	</div>
+</div>
+{% endblock %}

@@ -666,7 +666,7 @@ def course_present_sheet(request, course_code):
         if delete == "delete":
             return redirect('accounts:delete_course_attendance_details',course_code=course.course_code)
 
-        student = request.POST.get('s')
+        student = request.POST.get('student')
         percentage = 0.00
         if num_sheet != 0:
             number_of_attend = 0
@@ -680,18 +680,7 @@ def course_present_sheet(request, course_code):
         student_user = StudentProfile.objects.get(student_user=user)
         user_session = ClassSession.objects.get(session= session)
 
-        obj = CoursePercentage.objects.filter(student_user= user, course_code=course, session=user_session,teacher_user=teacher)
-
-        if not obj:
-            course_percentage=CoursePercentage(student_user= user, course_code=course, session=user_session,teacher_user=teacher)
-            course_percentage.percentage=percentage
-            course_percentage.save()
-        else:
-            course_percentage=CoursePercentage.objects.get(student_user= user, course_code=course, session=user_session,teacher_user=teacher)
-            course_percentage.percentage=percentage
-            course_percentage.save()
-
-        return redirect('accounts:course_percentage', course_code=course,session=session, student=student)
+        return redirect('accounts:view_teacher_student_profile', student=user)
 
     """ Paging the sheets """
     page = request.GET.get('page',1)

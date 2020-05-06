@@ -5,14 +5,11 @@
 {% block main-content %}
 			
 			<div class="row">
-				<div class="col-md-4" style="text-align:center;">
-					<a class=" mainLink" href="{% url 'accounts:login' %}">Login</a>
+				<div class="col-md-6 my-2" style="text-align:center;">
+					<a class="mainLink ml-5 mr-5"  href="{% url 'accounts:login' %}">Login</a>
 				</div>
-				<div class="col-md-4" style="text-align:center;">
-					<a class=" mainLink" href="{% url 'accounts:signup' %}" style="">Teacher-Sign Up</a>
-				</div>
-				<div class="col-md-4" style="text-align:center;">
-					<a href="{% url 'accounts:student_signup' %}"><span class=" mainLink">Student-SignUp</span></a>
+				<div class="col-md-6 my-2" style="text-align:center;">
+					<a class="mainLink ml-5 mr-5" href="{% url 'accounts:student_signup' %}"><span>Student-SignUp</span></a>
 				</div>				
 			</div>
 {% endblock %}

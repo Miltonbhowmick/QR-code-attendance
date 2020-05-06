@@ -30,7 +30,6 @@ urlpatterns = [
     path('qrcodeattendance/', views.qrcodeattendance, name='qrcodeattendance'),
     path('qrcodeattendance/login/', views.login_views, name='login'),
     path('qrcodeattendance/logout/', views.logout_views, name='logout'),
-    path('qrcodeattendance/signup/', views.register, name='signup'), # for teacher
     path('qrcodeattendance/student_signup/', views.student_signup, name='student_signup'),
     path('qrcodeattendance/admin_profile/',views.view_admin_profile, name='view_admin_profile'),
     path('qrcodeattendance/profile/', views.view_profile, name='profile'), # for teacher

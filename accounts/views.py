@@ -78,25 +78,7 @@ def login_views(request):
 
 def logout_views(request):
     logout(request)
-
     return redirect('accounts:qrcodeattendance')
-
-def register(request):
-    if request.user.is_authenticated:
-        return redirect('accounts:profile')
-
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST or None)
-        if form.is_valid():
-            user = form.deploy()
-            #login(request, user)
-            return redirect('accounts:login')
-        else:
-            pass
-    else:
-        form = RegistrationForm()
-    return render(request,'accounts/teacher_signup_form.html', {'form': form})
-
 
 def student_signup(request):
     if request.user.is_authenticated:

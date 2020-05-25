@@ -664,16 +664,6 @@ def course_present_sheet(request, course_code):
 
         return redirect('accounts:view_teacher_student_profile', student=user)
 
-    """ Paging the sheets """
-    page = request.GET.get('page',1)
-    paginator = Paginator(attend_students, 7)
-    try:
-        attend_students = paginator.page(page)
-    except PageNotAnInteger:
-        attend_students = paginator.page(1)
-    except EmptyPage:
-        attend_students = paginator.page(paginator.num_pages)
-
     context = {
         'students_name':students_name,
         'session_students':session_students,
